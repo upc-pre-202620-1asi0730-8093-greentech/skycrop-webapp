@@ -1,28 +1,28 @@
 import axios from 'axios';
+import {BaseApi} from "../../shared/infrastructure/base-api.js";
+import {BaseEndpoint} from "../../shared/infrastructure/base-endpoint.js";
 
-export class DiagnosesApi {
-  #http;
+const diagnosesEndpoint = import.meta.env.VITE_SKYCROP_DIAGNOSES_ENDPOINT_PATH
 
-  constructor(baseURL = import.meta.env.VITE_SKYCROP_API_URL) {
-    this.#http = axios.create({baseURL, timeout: 15000});
+export class DiagnosesApi extends BaseApi {
+  #diagnosesEndpoint;
+
+  constructor() {
+    super();
+    this.#diagnosesEndpoint = new BaseEndpoint(this, diagnosesEndpoint);
   }
 
-  getAll() {
-    return this.#http.get('/diagnoses');
+  getDiagnoses() {
+    console.log('?')
+    return this.#diagnosesEndpoint.getAll();
   }
 
-  getById(id) {
-    return this.#http.get(`/diagnoses/${encodeURIComponent(id)}`);
+  getDiagnosticById(id) {
+    return this.#diagnosesEndpoint.getById(id);
   }
 
-  getPlots() {
-    return this.#http.get('/plots');
-  }
-  getFlights() {
-    return this.#http.get('/flights');
-  }
 
-  create(resource) {
-    return this.#http.post('/diagnoses', resource);
+  createDiagnostic(resource) {
+    return this.#diagnosesEndpoint.create(resource);
   }
 }

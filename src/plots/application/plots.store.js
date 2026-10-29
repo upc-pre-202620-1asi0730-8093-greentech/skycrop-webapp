@@ -41,7 +41,7 @@ export const usePlotsStore = defineStore('plots', () => {
     loading.value = true;
     error.value = '';
     try {
-      const response = await api.getAll();
+      const response = await api.getPlots();
       if (currentRequest !== requestId) return;
       plots.value = AgriculturalPlotAssembler.toEntitiesFromResponse(response);
       await fetchSummaries();
@@ -59,7 +59,7 @@ export const usePlotsStore = defineStore('plots', () => {
     notFound.value = false;
     selectedPlot.value = null;
     try {
-      const response = await api.getById(id);
+      const response = await api.getPlotById(id);
       if (currentRequest !== requestId) return;
       selectedPlot.value = AgriculturalPlotAssembler.toEntityFromResource(response.data);
     } catch (failure) {

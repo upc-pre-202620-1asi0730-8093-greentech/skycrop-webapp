@@ -7,11 +7,11 @@ export class PlotsApi {
     this.#http = axios.create({baseURL});
   }
 
-  getAll() {
+  getPlots() {
     return this.#http.get('/plots');
   }
 
-  getById(id) {
+  getPlotById(id) {
     return this.#http.get(`/plots/${encodeURIComponent(id)}`);
   }
 
