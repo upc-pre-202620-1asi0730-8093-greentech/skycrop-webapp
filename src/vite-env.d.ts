@@ -6,6 +6,7 @@ interface ImportMetaEnv {
     readonly VITE_PRIME_UI_LICENSE_KEY: string;
     readonly VITE_SKYCROP_DIAGNOSES_ENDPOINT_PATH: string;
     readonly VITE_SKYCROP_PLOTS_ENDPOINT_PATH: string;
+    readonly VITE_SKYCROP_CROPS_ENDPOINT_PATH: string;
 }
 
 interface ImportMeta {

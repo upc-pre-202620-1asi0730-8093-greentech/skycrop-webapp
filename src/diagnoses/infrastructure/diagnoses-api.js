@@ -13,7 +13,6 @@ export class DiagnosesApi extends BaseApi {
   }
 
   getDiagnoses() {
-    console.log('?')
     return this.#diagnosesEndpoint.getAll();
   }
 
