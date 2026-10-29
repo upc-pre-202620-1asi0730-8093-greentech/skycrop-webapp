@@ -2,7 +2,7 @@ import axios from "axios";
 
 const platformUrl = import.meta.env.VITE_SKYCROP_API_URL;
 
-export class baseApi{
+export class BaseApi{
     #http;
 
     constructor() {
