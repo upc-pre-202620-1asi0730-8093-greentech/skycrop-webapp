@@ -18,6 +18,8 @@ export const useDronesStore = defineStore('drones', () => {
     error = ref(''),
     notFound = ref(false);
   let requestId = 0;
+
+
   async function load(id) {
     const request = ++requestId;
     loading.value = true;
@@ -44,6 +46,8 @@ export const useDronesStore = defineStore('drones', () => {
       if (request === requestId) loading.value = false;
     }
   }
+
+
   async function mutate(action) {
     if (saving.value) return null;
     saving.value = true;
@@ -58,6 +62,8 @@ export const useDronesStore = defineStore('drones', () => {
       saving.value = false;
     }
   }
+
+
   function register(attributes) {
     return mutate(async () => {
       const existing = await api.getAll();
@@ -78,6 +84,8 @@ export const useDronesStore = defineStore('drones', () => {
       return DroneAssembler.toEntityFromResource(response.data);
     });
   }
+
+
   function setConnection(connected) {
     return mutate(async () => {
       const fresh = (await api.getById(selectedDrone.value.id)).data;
@@ -90,6 +98,8 @@ export const useDronesStore = defineStore('drones', () => {
       return selectedDrone.value;
     });
   }
+
+
   function saveRoute(attributes, id) {
     return mutate(async () => {
       const route = new FlightRoute(attributes);
@@ -108,6 +118,8 @@ export const useDronesStore = defineStore('drones', () => {
       return response.data;
     });
   }
+
+
   function planFlight(routeId) {
     return mutate(async () => {
       const [droneResponse, routeResponse, flightResponse] = await Promise.all([
@@ -138,6 +150,8 @@ export const useDronesStore = defineStore('drones', () => {
       return response.data;
     });
   }
+
+
   function cancelFlight(id) {
     return mutate(async () => {
       const fresh = (await api.getFlights()).data.find((item) => String(item.id) === String(id));
@@ -154,6 +168,8 @@ export const useDronesStore = defineStore('drones', () => {
       return response.data;
     });
   }
+
+
   return {
     drones,
     selectedDrone,
