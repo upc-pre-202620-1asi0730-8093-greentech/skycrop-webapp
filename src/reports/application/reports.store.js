@@ -3,6 +3,8 @@ import {ref, shallowRef} from 'vue';
 import {ReportsApi} from '../infrastructure/reports-api.js';
 import {ReportAssembler} from '../infrastructure/report.assembler.js';
 import {createSeasonalReport} from '../domain/model/seasonal-report.js';
+
+
 export const useReportsStore = defineStore('reports', () => {
   const api = new ReportsApi();
   const reports = shallowRef([]),
@@ -12,6 +14,8 @@ export const useReportsStore = defineStore('reports', () => {
     error = ref(''),
     notFound = ref(false);
   let requestId = 0;
+
+
   async function load(id) {
     const request = ++requestId;
     loading.value = true;
@@ -38,6 +42,8 @@ export const useReportsStore = defineStore('reports', () => {
       if (request === requestId) loading.value = false;
     }
   }
+
+
   async function generate(attributes) {
     if (saving.value) return null;
     saving.value = true;
