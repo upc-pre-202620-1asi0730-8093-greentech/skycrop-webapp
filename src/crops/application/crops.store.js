@@ -5,8 +5,9 @@ import {CropsApi} from '../infrastructure/crops-api.js';
 import {CropAssembler} from '../infrastructure/crop.assembler.js';
 import {Crop} from '../domain/model/crop.entity.js';
 
+const cropsApi = new CropsApi();
+
 export const useCropsStore = defineStore('crops', () => {
-    const api = new CropsApi();
 
     const crops = shallowRef([]);
     const selectedCrop = shallowRef(null);
@@ -21,7 +22,7 @@ export const useCropsStore = defineStore('crops', () => {
 
         try {
             crops.value = CropAssembler.toEntitiesFromResponse(
-                await api.getAll()
+                await cropsApi.getCrops()
             );
         } catch {
             error.value = 'Unable to load crops.';
@@ -37,7 +38,7 @@ export const useCropsStore = defineStore('crops', () => {
         selectedCrop.value = null;
 
         try {
-            const response = await api.getById(id);
+            const response = await cropsApi.getCropById(id);
             selectedCrop.value = CropAssembler.toEntityFromResource(
                 response.data
             );
@@ -60,7 +61,7 @@ export const useCropsStore = defineStore('crops', () => {
 
         try {
             const crop = new Crop(attributes);
-            const response = await api.create(
+            const response = await cropsApi.createCrop(
                 CropAssembler.toResourceFromEntity(crop)
             );
 
@@ -91,7 +92,7 @@ export const useCropsStore = defineStore('crops', () => {
                 id
             });
 
-            const response = await api.update(
+            const response = await cropsApi.updateCrop(
                 id,
                 CropAssembler.toResourceFromEntity(crop)
             );

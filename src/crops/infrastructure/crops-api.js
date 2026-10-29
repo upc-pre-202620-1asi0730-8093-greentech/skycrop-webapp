@@ -1,26 +1,29 @@
+import {BaseApi} from "../../shared/infrastructure/base-api.js";
+import {BaseEndpoint} from "../../shared/infrastructure/base-endpoint.js";
 
-import axios from 'axios';
+const cropsEndpointPath = import.meta.env.VITE_SKYCROP_CROPS_ENDPOINT_PATH;
 
-export class CropsApi {
-    #http;
+export class CropsApi extends BaseApi{
+    #cropsEndpoint;
 
-    constructor(baseURL = import.meta.env.VITE_SKYCROP_API_URL) {
-        this.#http = axios.create({baseURL});
+    constructor() {
+        super();
+        this.#cropsEndpoint = new BaseEndpoint(this, cropsEndpointPath)
     }
 
-    getAll() {
-        return this.#http.get('/crops');
+    getCrops() {
+        return this.#cropsEndpoint.getAll();
     }
 
-    getById(id) {
-        return this.#http.get(`/crops/${encodeURIComponent(id)}`);
+    getCropById(id) {
+        return this.#cropsEndpoint.getById(id);
     }
 
-    create(resource) {
-        return this.#http.post('/crops', resource);
+    createCrop(resource) {
+        return this.#cropsEndpoint.create(resource);
     }
 
-    update(id, resource) {
-        return this.#http.put(`/crops/${encodeURIComponent(id)}`, resource);
+    updateCrop(id, resource) {
+        return this.#cropsEndpoint.update(id, resource);
     }
 }

@@ -1,16 +1,23 @@
-import axios from 'axios';
-export class ReportsApi {
-  #http;
-  constructor(baseURL = import.meta.env.VITE_SKYCROP_API_URL) {
-    this.#http = axios.create({baseURL, timeout: 15000});
+import {BaseApi} from "../../shared/infrastructure/base-api.js";
+import {BaseEndpoint} from "../../shared/infrastructure/base-endpoint.js";
+
+const reportsEndpoint = import.meta.env.VITE_SKYCROP_REPORTS_ENDPOINT_PATH;
+
+export class ReportsApi extends BaseApi {
+  #reportsEndpoint;
+
+  constructor() {
+    super();
+    this.#reportsEndpoint = new BaseEndpoint(this, reportsEndpoint);
   }
-  getAll() {
-    return this.#http.get('/reports');
+
+  getReports() {
+    return this.#reportsEndpoint.getAll();
   }
-  getById(id) {
-    return this.#http.get(`/reports/${encodeURIComponent(id)}`);
+  getReportById(id) {
+    return this.#reportsEndpoint.getById(id);
   }
-  create(resource) {
-    return this.#http.post('/reports', resource);
+  createReport(resource) {
+    return this.#reportsEndpoint.create(resource);
   }
 }
