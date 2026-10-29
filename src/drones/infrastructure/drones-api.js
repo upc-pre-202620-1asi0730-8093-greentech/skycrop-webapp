@@ -1,42 +1,56 @@
 import axios from 'axios';
-export class DronesApi {
-  #http;
-  constructor(baseURL = import.meta.env.VITE_SKYCROP_API_URL) {
-    this.#http = axios.create({baseURL, timeout: 15000});
+import {BaseApi} from "../../shared/infrastructure/base-api.js";
+import {BaseEndpoint} from "../../shared/infrastructure/base-endpoint.js";
+
+const dronesEndpoint = import.meta.env.VITE_SKYCROP_DRONES_ENDPOINT_PATH;
+const routesEndpoint = import.meta.env.VITE_SKYCROP_FLIGHT_ROUTES_ENDPOINT_PATH;
+const flightsEndpoint = import.meta.env.VITE_SKYCROP_FLIGHTS_ENDPOINT_PATH;
+const imagesEndpoint = import.meta.env.VITE_SKYCROP_AERIAL_IMAGES_ENDPOINT_PATH;
+
+export class DronesApi extends BaseApi {
+  #dronesEndpoint;
+  #routesEndpoint;
+  #flightsEndpoint;
+  #imagesEndpoint;
+
+  constructor() {
+    super();
+    this.#dronesEndpoint = new BaseEndpoint(this, dronesEndpoint);
+    this.#routesEndpoint = new BaseEndpoint(this, routesEndpoint);
+    this.#imagesEndpoint = new BaseEndpoint(this, imagesEndpoint);
+    this.#flightsEndpoint = new BaseEndpoint(this, flightsEndpoint);
   }
-  getAll() {
-    return this.#http.get('/drones');
+  getDrones() {
+    return this.#dronesEndpoint.getAll();
   }
-  getById(id) {
-    return this.#http.get(`/drones/${encodeURIComponent(id)}`);
+  getDroneById(id) {
+    return this.#dronesEndpoint.getById(id);
   }
-  create(resource) {
-    return this.#http.post('/drones', resource);
+  createDrone(resource) {
+    return this.#dronesEndpoint.create(resource);
   }
-  update(id, resource) {
-    return this.#http.patch(`/drones/${encodeURIComponent(id)}`, resource);
+  patchDrone(id, resource) {
+    return this.#dronesEndpoint.patch(id, resource);
   }
-  getPlots() {
-    return this.#http.get('/plots');
-  }
+
   getRoutes() {
-    return this.#http.get('/flightRoutes');
+    return this.#routesEndpoint.getAll();
   }
   getFlights() {
-    return this.#http.get('/flights');
+    return this.#flightsEndpoint.getAll();
   }
   getImages() {
-    return this.#http.get('/aerialImages');
+    return this.#imagesEndpoint.getAll();
   }
   saveRoute(resource, id) {
     return id === undefined
-      ? this.#http.post('/flightRoutes', resource)
-      : this.#http.patch(`/flightRoutes/${encodeURIComponent(id)}`, resource);
+      ? this.#routesEndpoint.create(resource)
+      : this.#routesEndpoint.patch(id, resource);
   }
   createFlight(resource) {
-    return this.#http.post('/flights', resource);
+    return this.#flightsEndpoint.create(resource);
   }
   cancelFlight(id) {
-    return this.#http.patch(`/flights/${encodeURIComponent(id)}`, {status: 'CANCELLED'});
+    return this.#flightsEndpoint.patch(id, {status: 'CANCELLED'});
   }
 }

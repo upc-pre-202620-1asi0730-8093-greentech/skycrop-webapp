@@ -4,9 +4,13 @@ import {DronesApi} from '../infrastructure/drones-api.js';
 import {DroneAssembler} from '../infrastructure/drone.assembler.js';
 import {Drone} from '../domain/model/drone.entity.js';
 import {FlightRoute} from '../domain/model/flight-route.entity.js';
+import {PlotsApi} from "../../plots/infrastructure/plots-api.js";
+
+const dronesApi = new DronesApi();
+const plotsApi = new PlotsApi();
 
 export const useDronesStore = defineStore('drones', () => {
-  const api = new DronesApi();
+
   const drones = shallowRef([]),
     selectedDrone = shallowRef(null),
     plots = shallowRef([]),
@@ -27,12 +31,12 @@ export const useDronesStore = defineStore('drones', () => {
     notFound.value = false;
     selectedDrone.value = null;
     try {
-      const response = id === undefined ? await api.getAll() : await api.getById(id);
+      const response = id === undefined ? await dronesApi.getDrones() : await dronesApi.getDroneById(id);
       const related = await Promise.all([
-        api.getPlots(),
-        api.getRoutes(),
-        api.getFlights(),
-        api.getImages(),
+        plotsApi.getPlots(),
+        dronesApi.getRoutes(),
+        dronesApi.getFlights(),
+        dronesApi.getImages(),
       ]);
       if (request !== requestId) return;
       if (id === undefined) drones.value = response.data.map(DroneAssembler.toEntityFromResource);
@@ -66,7 +70,7 @@ export const useDronesStore = defineStore('drones', () => {
 
   function register(attributes) {
     return mutate(async () => {
-      const existing = await api.getAll();
+      const existing = await dronesApi.getDrones();
       if (
         existing.data.some(
           (item) =>
@@ -80,7 +84,7 @@ export const useDronesStore = defineStore('drones', () => {
         status: 'DISCONNECTED',
         createdAt: new Date().toISOString(),
       });
-      const response = await api.create(DroneAssembler.toResourceFromEntity(entity));
+      const response = await dronesApi.createDrone(DroneAssembler.toResourceFromEntity(entity));
       return DroneAssembler.toEntityFromResource(response.data);
     });
   }
@@ -88,10 +92,10 @@ export const useDronesStore = defineStore('drones', () => {
 
   function setConnection(connected) {
     return mutate(async () => {
-      const fresh = (await api.getById(selectedDrone.value.id)).data;
+      const fresh = (await dronesApi.getDroneById(selectedDrone.value.id)).data;
       if (!['DISCONNECTED', 'AVAILABLE'].includes(fresh.status))
         throw new Error('Drone unavailable');
-      const response = await api.update(fresh.id, {
+      const response = await dronesApi.patchDrone(fresh.id, {
         status: connected ? 'AVAILABLE' : 'DISCONNECTED',
       });
       selectedDrone.value = DroneAssembler.toEntityFromResource(response.data);
@@ -110,7 +114,7 @@ export const useDronesStore = defineStore('drones', () => {
         speedMetersPerSecond: route.speedMetersPerSecond,
         waypoints: route.waypoints,
       };
-      const response = await api.saveRoute(resource, id);
+      const response = await dronesApi.saveRoute(resource, id);
       routes.value = [
         ...routes.value.filter((item) => String(item.id) !== String(response.data.id)),
         response.data,
@@ -123,9 +127,9 @@ export const useDronesStore = defineStore('drones', () => {
   function planFlight(routeId) {
     return mutate(async () => {
       const [droneResponse, routeResponse, flightResponse] = await Promise.all([
-        api.getById(selectedDrone.value.id),
-        api.getRoutes(),
-        api.getFlights(),
+        dronesApi.getDroneById(selectedDrone.value.id),
+        dronesApi.getRoutes(),
+        dronesApi.getFlights(),
       ]);
       const drone = droneResponse.data,
         route = routeResponse.data.find((item) => String(item.id) === String(routeId));
@@ -139,7 +143,7 @@ export const useDronesStore = defineStore('drones', () => {
         )
       )
         throw new Error('Drone unavailable');
-      const response = await api.createFlight({
+      const response = await dronesApi.createFlight({
         droneId: drone.id,
         flightRouteId: route.id,
         plotId: route.plotId,
@@ -154,14 +158,14 @@ export const useDronesStore = defineStore('drones', () => {
 
   function cancelFlight(id) {
     return mutate(async () => {
-      const fresh = (await api.getFlights()).data.find((item) => String(item.id) === String(id));
+      const fresh = (await dronesApi.getFlights()).data.find((item) => String(item.id) === String(id));
       if (
         !fresh ||
         String(fresh.droneId) !== String(selectedDrone.value.id) ||
         fresh.status !== 'PLANNED'
       )
         throw new Error('Flight unavailable');
-      const response = await api.cancelFlight(id);
+      const response = await dronesApi.cancelFlight(id);
       flights.value = flights.value.map((item) =>
         String(item.id) === String(id) ? response.data : item,
       );
