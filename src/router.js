@@ -20,10 +20,10 @@ const routes = [
   {path: '/plots/new', name: 'plot-registration', component: () => import('./plots/presentation/views/plot-registration.vue')},
   {path: '/plots/:id', name: 'plot-details', component: () => import('./plots/presentation/views/plot-details.vue')},
 
-  {path: '/plots/:id/crops/new', name: 'crop-registration', component: () => import('./field-management/presentation/components/crop-form.vue')},
-  {path: '/plots/:id/crops', name: 'crop-list', component: () => import('./field-management/presentation/views/crop-list.vue')},
-  {path: '/plots/:id/crops/:cropId/edit', name: 'crop-edit', component: () => import('./field-management/presentation/components/crop-form.vue')},
-  {path: '/plots/:id/crops/:cropId', name: 'crop-details', component: () => import('./field-management/presentation/views/crop-details.vue')}
+  {path: '/plots/:id/crops/new', name: 'crop-registration', component: () => import('./crops/presentation/components/crop-form.vue')},
+  {path: '/plots/:id/crops', name: 'crop-list', component: () => import('./crops/presentation/views/crop-list.vue')},
+  {path: '/plots/:id/crops/:cropId/edit', name: 'crop-edit', component: () => import('./crops/presentation/components/crop-form.vue')},
+  {path: '/plots/:id/crops/:cropId', name: 'crop-details', component: () => import('./crops/presentation/views/crop-details.vue')}
 ];
 
 export default createRouter({
