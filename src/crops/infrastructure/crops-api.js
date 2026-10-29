@@ -1,5 +1,3 @@
-
-import axios from 'axios';
 import {BaseApi} from "../../shared/infrastructure/base-api.js";
 import {BaseEndpoint} from "../../shared/infrastructure/base-endpoint.js";
 
