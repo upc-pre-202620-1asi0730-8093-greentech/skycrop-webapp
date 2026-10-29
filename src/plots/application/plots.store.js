@@ -3,9 +3,15 @@ import {ref, shallowRef} from 'vue';
 import {PlotsApi} from '../infrastructure/plots-api.js';
 import {AgriculturalPlotAssembler} from '../infrastructure/agricultural-plot.assembler.js';
 import {AgriculturalPlot} from '../domain/model/agricultural-plot.entity.js';
+import {DiagnosesApi} from "../../diagnoses/infrastructure/diagnoses-api.js";
+import {CropsApi} from "../../crops/infrastructure/crops-api.js";
+
+const plotsApi = new PlotsApi();
+const diagnosesApi = new DiagnosesApi();
+const cropsApi = new CropsApi();
 
 export const usePlotsStore = defineStore('plots', () => {
-  const api = new PlotsApi();
+
   const plots = shallowRef([]);
   const selectedPlot = shallowRef(null);
   const loading = ref(false);
@@ -20,7 +26,7 @@ export const usePlotsStore = defineStore('plots', () => {
     summaryError.value = '';
     summaries.value = {};
     try {
-      const [crops, notifications, diagnoses] = await Promise.all([api.getCrops(), api.getNotifications(), api.getDiagnoses()]);
+      const [crops, notifications, diagnoses] = await Promise.all([cropsApi.getCrops(), plotsApi.getNotifications(), diagnosesApi.getDiagnoses()]);
       const diagnosisPlots = new Map(diagnoses.data.map(item => [String(item.id), item.plotId]));
       const summary = {};
       for (const plot of plots.value) {
@@ -41,7 +47,7 @@ export const usePlotsStore = defineStore('plots', () => {
     loading.value = true;
     error.value = '';
     try {
-      const response = await api.getPlots();
+      const response = await plotsApi.getPlots();
       if (currentRequest !== requestId) return;
       plots.value = AgriculturalPlotAssembler.toEntitiesFromResponse(response);
       await fetchSummaries();
@@ -59,7 +65,7 @@ export const usePlotsStore = defineStore('plots', () => {
     notFound.value = false;
     selectedPlot.value = null;
     try {
-      const response = await api.getPlotById(id);
+      const response = await plotsApi.getPlotById(id);
       if (currentRequest !== requestId) return;
       selectedPlot.value = AgriculturalPlotAssembler.toEntityFromResource(response.data);
     } catch (failure) {
@@ -77,7 +83,7 @@ export const usePlotsStore = defineStore('plots', () => {
     error.value = '';
     try {
       const plot = new AgriculturalPlot({...attributes, createdAt: new Date().toISOString()});
-      const response = await api.create(AgriculturalPlotAssembler.toResourceFromEntity(plot));
+      const response = await plotsApi.createPlot(AgriculturalPlotAssembler.toResourceFromEntity(plot));
       const savedPlot = AgriculturalPlotAssembler.toEntityFromResource(response.data);
       plots.value = [...plots.value, savedPlot];
       return savedPlot;

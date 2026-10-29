@@ -8,7 +8,7 @@ export class CropsApi {
         this.#http = axios.create({baseURL});
     }
 
-    getAll() {
+    getCrops() {
         return this.#http.get('/crops');
     }
 

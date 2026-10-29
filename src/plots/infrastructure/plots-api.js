@@ -1,27 +1,36 @@
 import axios from 'axios';
+import {BaseApi} from "../../shared/infrastructure/base-api.js";
+import {BaseEndpoint} from "../../shared/infrastructure/base-endpoint.js";
 
-export class PlotsApi {
-  #http;
+const plotsEndpoint = import.meta.env.VITE_SKYCROP_PLOTS_ENDPOINT_PATH;
+const platformUrl = import.meta.env.VITE_SKYCROP_API_URL;
 
-  constructor(baseURL = import.meta.env.VITE_SKYCROP_API_URL) {
-    this.#http = axios.create({baseURL});
+export class PlotsApi extends BaseApi {
+  #plotsEndpoint;
+
+  constructor() {
+    super();
+    this.#plotsEndpoint = new BaseEndpoint(this, plotsEndpoint);
   }
 
   getPlots() {
-    return this.#http.get('/plots');
+    return this.#plotsEndpoint.getAll();
   }
 
   getPlotById(id) {
-    return this.#http.get(`/plots/${encodeURIComponent(id)}`);
+    return this.#plotsEndpoint.getById(id);
   }
 
-  getCrops() { return this.#http.get('/crops'); }
-
-  getNotifications() { return this.#http.get('/notifications'); }
-
-  getDiagnoses() { return this.#http.get('/diagnoses'); }
-
-  create(resource) {
-    return this.#http.post('/plots', resource);
+  createPlot(resource) {
+    return this.#plotsEndpoint.create(resource);
   }
+
+
+  //TODO: Implement notifications bounded context, then delete this method
+  getNotifications() {
+    return axios.create({baseURL: platformUrl}).get('/notifications');
+
+  }
+
+
 }

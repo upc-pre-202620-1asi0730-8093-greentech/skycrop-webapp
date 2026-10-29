@@ -21,7 +21,7 @@ export const useCropsStore = defineStore('crops', () => {
 
         try {
             crops.value = CropAssembler.toEntitiesFromResponse(
-                await api.getAll()
+                await api.getCrops()
             );
         } catch {
             error.value = 'Unable to load crops.';
