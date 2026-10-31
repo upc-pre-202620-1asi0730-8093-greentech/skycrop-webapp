@@ -43,6 +43,9 @@ h1 { margin: 0 0 32px; font-size: clamp(24px, 2vw, 32px); }
 .plots-page > h1 { padding-bottom: 24px; border-bottom: 1px solid var(--plot-blue); }
 .page-heading h1 { margin-bottom: 0; }
 
+.quick-action-slider { display: grid; grid-auto-flow: column;  grid-auto-columns: 300px; align-items: center; gap: 16px; overflow-x: auto; overflow-y: hidden; scroll-behavior: smooth; }
+.quick-action {background: var(--plot-blue); color: white; padding: 16px 24px; border-radius: 6px; text-decoration: none;}
+
 .plot-filters { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; padding: 16px 0 24px; border-bottom: 1px solid var(--plot-blue); }
 .filter-field { display: flex; align-items: center; gap: 16px; min-width: 0; }
 .filter-field label { flex-shrink: 0; }
@@ -76,6 +79,18 @@ fieldset.plot-card legend { float: left; width: 100%; margin-bottom: 24px; text-
 .plot-details dt { font-weight: 600; }
 .plot-details dd { margin: 0; }
 
+.plot-slider { display: grid; grid-auto-flow: column; grid-auto-columns: 400px; max-height: 350px; gap: 16px; overflow-x: auto; overflow-y: hidden; scroll-behavior: smooth; }
+.plot-summary {display: flex; flex-direction: column; padding: 0; gap: 4px;}
+.plot-summary .plot-image  {display: block; width: 100%; min-height: 100px; height: 70%; max-height: 175px; object-fit: cover; }
+.plot-summary a { display: inline-block; padding: 8px 16px; background: #12658b; border-radius: 6px; text-decoration: none; }
+.plot-summary h2 {margin: 0; }
+.plot-summary-content {display: flex; flex-direction: column; justify-content: space-between; padding: 16px; gap: 4px;}
+.plot-summary-content > h2 { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 90%;}
+.plot-summary-details {display: flex; flex-direction: row; justify-content: space-between; gap: 4px;}
+.plot-summary-information {display: flex; flex-direction: column; align-items: start; margin: 0; max-width: 55%; }
+.plot-summary-information p { line-height: 1; width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.plot-summary-actions {display: flex; flex-direction: row; align-items: center; gap: 8px; }
+
 .app-footer { margin-top: 32px; padding: 16px; background: #192820; color: white; text-align: center; font-size: 13px; }
 a:focus-visible, button:focus-visible { outline: 3px solid #1976a8; outline-offset: 4px; }
 .menu-toggle { display: inline-flex; align-items: center; justify-content: center; width: 44px; height: 44px; margin-right: 12px; color: white; background: transparent; border: 1px solid #ffffff80; border-radius: 6px; cursor: pointer; }
@@ -100,6 +115,8 @@ a:focus-visible, button:focus-visible { outline: 3px solid #1976a8; outline-offs
   .page-content { padding: 24px 16px; }
   .plot-grid, .plot-filters { grid-template-columns: 1fr; gap: 20px; }
   .plot-card { padding: 20px; }
+  .plot-summary {padding: 0;}
+    .plot-slider {grid-auto-columns: 300px; }
   .filter-field { flex-direction: column; align-items: stretch; gap: 8px; }
   .plot-details { grid-template-columns: 1fr; gap: 8px; }
   .plot-details dd { margin-bottom: 8px; }
@@ -347,7 +364,18 @@ a:focus-visible, button:focus-visible { outline: 3px solid #1976a8; outline-offs
 .diagnosis-legend { display: flex; flex-wrap: wrap; gap: 16px; padding: 0; list-style: none; }
 .diagnosis-legend li { display: inline-flex; align-items: center; gap: 8px; }
 .diagnosis-legend span { width: 14px; height: 14px; border-radius: 50%; border: 1px solid white; }
-@media (max-width: 900px) { .diagnosis-detail-grid, .diagnosis-form-grid { grid-template-columns: 1fr; } }
+.diagnoses-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+.diagnoses-grid-card { display: grid; background: var(--plot-blue); padding: 16px 24px; border-radius: 6px; color: white; gap: 8px;}
+.diagnoses-grid-card h2 { margin: 0; }
+.diagnoses-grid-card p { margin: 0; }
+
+@media (max-width: 900px) {
+  .diagnosis-detail-grid, .diagnosis-form-grid { grid-template-columns: 1fr; }
+  .diagnoses-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+}
+
+@media (max-width: 600px) { .diagnoses-grid { grid-template-columns: minmax(0, 1fr); gap: 16px; }
+}
 
 .diagnosis-pagination { display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: 12px; padding: 16px 0; }
 .diagnoses-page .diagnosis-pagination .p-select { width: 90px; }

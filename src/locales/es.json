@@ -306,6 +306,20 @@
     "FERTILIZER_DEFICIENCY": "Deficiencia de nutrientes",
     "pageSize": "Filas por página",
     "previous": "Anterior",
-    "next": "Siguiente"
+    "next": "Siguiente",
+    "homeSummary": "Diagnóstico:",
+    "detectedDate": "Detectado el:",
+    "affectedPlot": "Parcela afectada:"
+  },
+  "home": {
+    "welcome": "Bienvenido, {user}",
+    "checkPlots": "Revisa tus parcelas",
+    "quickActions": {
+      "heading": "Acciones Rápidas",
+      "registerDrone": "Registrar un Dron",
+      "seeReports": "Ver Reportes Recientes",
+      "seeDiagnoses": "Ver Diagnósticos Recientes"
+    },
+    "recentDiagnoses": "Diagnósticos Recientes"
   }
 }
