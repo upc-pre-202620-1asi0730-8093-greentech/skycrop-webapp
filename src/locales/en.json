@@ -306,6 +306,20 @@
     "FERTILIZER_DEFICIENCY": "Nutrient deficiency",
     "pageSize": "Rows per page",
     "previous": "Previous",
-    "next": "Next"
+    "next": "Next",
+    "homeSummary": "Diagnostic:",
+    "detectedDate": "Detected at:",
+    "affectedPlot": "Affected Plot:"
+  },
+  "home": {
+    "welcome": "Welcome, {user}",
+    "checkPlots": "Check on your plots",
+    "quickActions": {
+      "heading": "Quick Actions",
+      "registerDrone": "Register a Drone",
+      "seeReports": "See Last Reports",
+      "seeDiagnoses": "See Last Diagnoses"
+    },
+    "recentDiagnoses": "Recent Diagnoses"
   }
 }

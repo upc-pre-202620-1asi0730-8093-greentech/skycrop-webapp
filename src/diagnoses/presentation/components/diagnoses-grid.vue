@@ -43,18 +43,18 @@ onMounted(() => {
       >
         <div class="diagnoses-grid-card">
           <h2>
-            {{ t('diagnoses.result') }}
+            {{ t('diagnoses.homeSummary') }}
             {{ diagnostic.topAnomaly ? t(`diagnoses.${diagnostic.topAnomaly}`) : t('diagnoses.noAnomalies')
             }}
           </h2>
 
           <p>
-            {{ t('diagnoses.date') }}
+            {{ t('diagnoses.detectedDate') }}
             {{ date(diagnostic.generatedAt) }}
           </p>
 
           <p>
-            {{ t('diagnoses.plot') }}
+            {{ t('diagnoses.affectedPlot') }}
             {{ plotName(diagnostic.plotId) }}
           </p>
 
