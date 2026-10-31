@@ -12,7 +12,7 @@ const pendingSection = () => import('./shared/presentation/views/pending-section
 
 const routes = [
   {path: '/', redirect: '/plots'},
-  {path: '/home', name: 'home', component: home, props: {titleKey: 'navigation.home'}},
+  {path: '/home', name: 'home', component: home},
   {path: '/profiles', name: 'profile', component: pendingSection, props: {titleKey: 'navigation.profile'}},
   {path: '/settings', name: 'settings', component: pendingSection, props: {titleKey: 'navigation.settings'}},
 
