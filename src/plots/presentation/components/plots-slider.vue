@@ -1,6 +1,6 @@
 <script setup>
 import {useI18n} from 'vue-i18n';
-const {t, n} = useI18n();
+const {t} = useI18n();
 
 import {storeToRefs} from "pinia";
 

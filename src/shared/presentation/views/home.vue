@@ -3,6 +3,12 @@ import {useI18n} from 'vue-i18n';
 import PlotsSlider from "../../../plots/presentation/components/plots-slider.vue";
 const {t} = useI18n();
 
+const actions = [
+  {label: 'Register a Drone', to: '/drones/new'},
+  {label: 'See Last Reports', to: '/reports'},
+  {label: 'See Last Diagnoses', to: '/diagnoses'},
+]
+
 </script>
 
 
@@ -29,6 +35,11 @@ const {t} = useI18n();
     <div>
       <h2>Quick Actions</h2>
       <div>
+        <article class="quick-action-slider">
+          <router-link v-for="action in actions" :key="action.label" :to="action.to" class="quick-action">
+            {{ action.label }}
+          </router-link>
+        </article>
       </div>
     </div>
   </section>
