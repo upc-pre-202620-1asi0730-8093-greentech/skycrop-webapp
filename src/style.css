@@ -365,6 +365,11 @@ a:focus-visible, button:focus-visible { outline: 3px solid #1976a8; outline-offs
 .diagnosis-legend { display: flex; flex-wrap: wrap; gap: 16px; padding: 0; list-style: none; }
 .diagnosis-legend li { display: inline-flex; align-items: center; gap: 8px; }
 .diagnosis-legend span { width: 14px; height: 14px; border-radius: 50%; border: 1px solid white; }
+.diagnoses-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+.diagnoses-grid-card { display: grid; background: var(--plot-blue); padding: 16px 24px; border-radius: 6px; color: white; gap: 8px;}
+.diagnoses-grid-card h2 { margin: 0; }
+.diagnoses-grid-card p { margin: 0; }
+
 @media (max-width: 900px) { .diagnosis-detail-grid, .diagnosis-form-grid { grid-template-columns: 1fr; } }
 
 .diagnosis-pagination { display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: 12px; padding: 16px 0; }

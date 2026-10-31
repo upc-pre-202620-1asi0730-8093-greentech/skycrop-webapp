@@ -1,6 +1,7 @@
 <script setup>
 import {useI18n} from 'vue-i18n';
 import PlotsSlider from "../../../plots/presentation/components/plots-slider.vue";
+import DiagnosesGrid from "../../../diagnoses/presentation/components/diagnoses-grid.vue";
 const {t} = useI18n();
 
 const actions = [
@@ -49,6 +50,7 @@ const actions = [
     <div>
       <h2>Recent diagnoses</h2>
       <div>
+        <diagnoses-grid/>
       </div>
     </div>
   </section>
