@@ -9,16 +9,16 @@ const { t } = useI18n();
 
 <template>
   <section class="page-heading">
-    <h1>Page not found</h1>
+    <h1>{{t('pageNotFound.title')}}</h1>
   </section>
 
   <section class="not-found-section">
     <p class="not-found-text">
-      The path "{{unavailableRoute}}" does not exist
+      {{ t('pageNotFound.content', { 'unavailablePath': unavailableRoute }) }}
     </p>
 
     <router-link to="/home" class="action-link">
-      Return to home
+      {{t('pageNotFound.goHome')}}
     </router-link>
   </section>
 
