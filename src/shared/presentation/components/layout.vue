@@ -14,14 +14,14 @@
         else menuCollapsed.value = !menuCollapsed.value;
     }
     watch(() => route.fullPath, () => { menuOpen.value = false; });
+
+    //TODO: Add Profiles and Settings navigation once their corresponding views are implemented
     const items = [
         {label: 'navigation.home', to: '/home'},
-        {label: 'navigation.profile', to: '/profiles'},
         {label: 'navigation.plots', to: '/plots'},
         {label: 'navigation.drones', to: '/drones'},
         {label: 'navigation.diagnoses', to: '/diagnoses'},
-        {label: 'navigation.reports', to: '/reports'},
-        {label: 'navigation.settings', to: '/settings'}
+        {label: 'navigation.reports', to: '/reports'}
     ];
 </script>
 
