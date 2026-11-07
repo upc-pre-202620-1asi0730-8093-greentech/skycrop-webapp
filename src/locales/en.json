@@ -321,5 +321,10 @@
       "seeDiagnoses": "See Last Diagnoses"
     },
     "recentDiagnoses": "Recent Diagnoses"
+  },
+  "pageNotFound": {
+    "title": "Page not found",
+    "content": "The path {unavailablePath} does not exist.",
+    "goHome": "Return to Home"
   }
 }

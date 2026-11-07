@@ -8,11 +8,15 @@ import cropsRoutes from "./crops/presentation/crops-routes.js";
 import dronesRoutes from "./drones/presentation/drones-routes.js";
 import diagnosesRoutes from "./diagnoses/presentation/diagnoses-routes.js";
 
+
+const pageNotFound = () => import("./shared/presentation/views/page-not-found.vue");
+
 const pendingSection = () => import('./shared/presentation/views/pending-section.vue');
 
 const routes = [
   {path: '/', redirect: '/plots'},
   {path: '/home', name: 'home', component: home},
+  { path: '/:pathMatch(.*)*', name: 'not-found', component: pageNotFound},
   {path: '/profiles', name: 'profile', component: pendingSection, props: {titleKey: 'navigation.profile'}},
   {path: '/settings', name: 'settings', component: pendingSection, props: {titleKey: 'navigation.settings'}},
 

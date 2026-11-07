@@ -321,5 +321,10 @@
       "seeDiagnoses": "Ver Diagnósticos Recientes"
     },
     "recentDiagnoses": "Diagnósticos Recientes"
+  },
+  "pageNotFound": {
+    "title": "Pagina no encontrada",
+    "content": "La ruta {unavailablePath} no existe.",
+    "goHome": "Regresar a Inicio"
   }
 }
