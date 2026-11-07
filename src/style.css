@@ -379,3 +379,7 @@ a:focus-visible, button:focus-visible { outline: 3px solid #1976a8; outline-offs
 
 .diagnosis-pagination { display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: 12px; padding: 16px 0; }
 .diagnoses-page .diagnosis-pagination .p-select { width: 90px; }
+
+
+.not-found-section { display: flex; flex-direction: column; flex-wrap: wrap; align-items: center; justify-content: center; gap: 12px; padding: 16px 0; }
+.not-found-text { text-align: center; padding: 0; font-size: 24px; }

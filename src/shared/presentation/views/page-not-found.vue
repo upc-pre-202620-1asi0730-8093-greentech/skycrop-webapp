@@ -8,16 +8,16 @@ const { t } = useI18n();
 </script>
 
 <template>
-  <section>
+  <section class="page-heading">
     <h1>Page not found</h1>
   </section>
 
-  <section>
-    <p>
+  <section class="not-found-section">
+    <p class="not-found-text">
       The path "{{unavailableRoute}}" does not exist
     </p>
 
-    <router-link to="/home">
+    <router-link to="/home" class="action-link">
       Return to home
     </router-link>
   </section>
