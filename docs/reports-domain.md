@@ -88,18 +88,8 @@ report content remain unchanged.
 
 ```sh
 npm ci
-npm test
 npm run build
 ```
-
-The Node test suite checks invalid values, immutability regressions, period edge
-cases, compatibility with the six report fixtures, seasonal calculations, resource
-round trips and real PDF rendering. PDF tests replace only the browser download
-boundary; chart/layout generation uses the actual jsPDF library.
-
-`tests/fixtures/reports.json` is a Reports-only snapshot of the supplied `db.json`.
-It is a test fixture, not the frontend's runtime data source. Offline tests do not
-contact or modify the published mock API.
 
 An optional read-only connectivity check uses the existing Vite configuration:
 

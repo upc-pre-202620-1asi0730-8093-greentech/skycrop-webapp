@@ -103,18 +103,8 @@ provided by the mock API; those event integrations remain backend responsibiliti
 
 ```sh
 npm ci
-npm test
-npx playwright install chromium
-npm run test:ui
 npm run build
 ```
-
-The browser suite runs desktop and mobile projects with every API collection
-intercepted in memory. It covers registration, persistence across reloads,
-profile updates, named crop routing, recovery, second-factor access, localization,
-empty and failed loads, payment outcomes, cancellation, duplicate invitations,
-notification filtering and viewport overflow. It never writes to the published
-mock API. Screenshots and traces stay under ignored `test-results/`.
 
 ## Interface copy
 
