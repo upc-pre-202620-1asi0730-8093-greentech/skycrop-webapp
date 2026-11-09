@@ -40,3 +40,18 @@ Configure the service URLs in `.env` before starting the application or creating
 | `VITE_MAP_TILE_URL` | Map tiles, using the `{z}`, `{x}` and `{y}` placeholders |
 
 Run `npm run build` to compile the application. Restart the development server or rebuild the application after changing these values.
+
+
+## Reports domain
+
+Reports use immutable value objects while preserving the existing published mock API
+and presentation contracts. See [Reports domain](docs/reports-domain.md) for the
+model, validation rules, JSDoc conventions, tests and backend integration differences.
+
+```sh
+npm test
+npm run check:reports-api
+```
+
+The API check sends only GET to the configured reports collection. Cloning the mock
+API repository is not required to consume the service already published on Azure.
