@@ -359,7 +359,6 @@ a:focus-visible, button:focus-visible { outline: 3px solid #1976a8; outline-offs
 .diagnosis-generation { margin-top: 24px; }
 .diagnosis-form-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; }
 .diagnosis-detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin: 24px 0; }
-.diagnosis-simulation-notice { border-left: 4px solid var(--plot-blue); background: #e1f0f6; padding: 16px; }
 .diagnosis-anomaly { padding: 16px; margin-top: 16px; background: #ffffff20; }
 .diagnosis-legend { display: flex; flex-wrap: wrap; gap: 16px; padding: 0; list-style: none; }
 .diagnosis-legend li { display: inline-flex; align-items: center; gap: 8px; }
@@ -389,7 +388,6 @@ a:focus-visible, button:focus-visible { outline: 3px solid #1976a8; outline-offs
 .access-page { flex: 1; display: flex; flex-direction: column; align-items: center; padding: 24px 16px 48px; }
 .access-logo { width: 133px; height: 107px; object-fit: contain; }
 .access-page h1 { margin: 16px 0; text-align: center; }
-.prototype-notice { max-width: 750px; padding: 12px 16px; border-left: 4px solid var(--action-blue); background: #e1f0f6; color: #163348; }
 .account-card { background: #3890c0; border-radius: 12px; padding: 32px; color: white; min-width: 0; overflow-wrap: anywhere; }
 .account-card h2 { margin-top: 0; font-size: 24px; }
 .account-card a { color: white; }

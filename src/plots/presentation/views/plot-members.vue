@@ -31,7 +31,6 @@ async function invite() { await run(async () => { await store.invite(form); form
         <div class="form-field"><label for="invitation-plot">{{ t('plots.name') }}</label><pv-select input-id="invitation-plot" v-model="form.plotId" :options="store.plots" option-label="name" option-value="id" /></div>
         <div class="form-field"><label for="invitation-email">{{ t('account.email') }}</label><pv-input-text id="invitation-email" v-model="form.email" type="email" maxlength="254" required /></div>
         <div class="form-field"><label for="invitation-role">{{ t('workspace.role') }}</label><pv-select input-id="invitation-role" v-model="form.role" :options="['COLLABORATOR', 'VIEWER'].map(value => ({value, label: t(`workspace.${value}`)}))" option-label="label" option-value="value" /></div>
-        <p>{{ t('workspace.invitationNotice') }}</p>
         <pv-button type="submit" :label="t('workspace.invite')" :disabled="busy" />
       </form>
       <div v-else-if="form.plotId != null" class="empty-state"><p>{{ t('workspace.invitationForbidden') }}</p><label for="readonly-plot">{{ t('plots.name') }}</label><pv-select input-id="readonly-plot" v-model="form.plotId" :options="store.plots" option-label="name" option-value="id" /></div><p v-else class="empty-state">{{ t('workspace.noPlot') }}</p>

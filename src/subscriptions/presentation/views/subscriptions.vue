@@ -27,14 +27,13 @@ async function cancel() { await run(async () => { await store.cancel(cancelId.va
     <h1>{{ t(checkout ? 'billing.acquire' : resultPage ? 'billing.paymentResult' : 'navigation.subscriptions') }}</h1>
     <request-status :busy="busy" :error="error" :success="success" />
     <pv-button v-if="error" :label="t('workspace.retry')" @click="load" :disabled="busy" />
-    <p class="prototype-notice">{{ t('billing.demoNotice') }}</p>
     <template v-if="loaded">
       <template v-if="resultPage">
         <article v-if="result" class="account-card profile-card">
           <h2>{{ t(`billing.${result.status}`) }}</h2>
           <p>{{ t('billing.reference') }}: {{ result.id }}</p>
           <p>{{ n(result.amount, {style: 'currency', currency: result.currency}) }}</p>
-          <p>{{ t('billing.noReceiptEmail') }}</p>
+          <p>{{ t('billing.paymentRecordHint') }}</p>
         </article>
         <p v-else class="empty-state">{{ t('billing.paymentNotFound') }}</p>
       </template>
@@ -43,9 +42,8 @@ async function cancel() { await run(async () => { await store.cancel(cancelId.va
           <article class="account-card"><h2>{{ t('billing.details') }}</h2><h3>{{ selected.name }}</h3><ul><li v-for="feature in selected.features" :key="feature">{{ feature }}</li></ul><p>{{ t('billing.monthlyPrice') }}: {{ n(selected.price, {style: 'currency', currency: selected.currency}) }}</p></article>
           <form class="account-card" @submit.prevent="pay">
             <h2>{{ t('billing.payment') }}</h2>
-            <p>{{ t('billing.cardNotice') }}</p>
-            <div class="form-field"><label for="payment-outcome">{{ t('billing.simulationResult') }}</label><pv-select input-id="payment-outcome" v-model="outcome" :options="['APPROVED', 'DECLINED', 'PENDING'].map(value => ({value, label: t(`billing.${value}`)}))" option-label="label" option-value="value" /></div>
-            <label class="check-field"><input v-model="confirmed" type="checkbox" required>{{ t('billing.confirmSimulation') }}</label>
+            <div class="form-field"><label for="payment-outcome">{{ t('billing.paymentStatus') }}</label><pv-select input-id="payment-outcome" v-model="outcome" :options="['APPROVED', 'DECLINED', 'PENDING'].map(value => ({value, label: t(`billing.${value}`)}))" option-label="label" option-value="value" /></div>
+            <label class="check-field"><input v-model="confirmed" type="checkbox" required>{{ t('billing.confirmPayment') }}</label>
             <pv-button type="submit" :label="t('billing.pay')" :disabled="busy || !confirmed" />
           </form>
         </div>

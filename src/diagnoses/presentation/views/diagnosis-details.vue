@@ -32,9 +32,7 @@ watch(
       <pv-button :label="t('plots.retry')" @click="store.fetchDiagnoses(route.params.id)" />
     </div>
     <template v-else-if="diagnosis"
-      ><p v-if="diagnosis.source === 'SIMULATED'" class="diagnosis-simulation-notice" role="status">
-        {{ t('diagnoses.simulationHelp') }}
-      </p>
+      >
       <p v-if="store.relatedError" role="status" class="error-message">
         {{ t(store.relatedError) }}
       </p>
