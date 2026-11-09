@@ -3,10 +3,30 @@ import {computed, onMounted, reactive, ref} from 'vue';
 import {useRoute} from 'vue-router';
 import {useI18n} from 'vue-i18n';
 import {usePlotMembersStore} from '../../application/plot-members.store.js';
-import {useRequest} from '../../../shared/presentation/composables/use-request.js';
 import RequestStatus from '../../../shared/presentation/components/request-status.vue';
 const store = usePlotMembersStore(), route = useRoute(), {t} = useI18n();
-const {busy, error, success, run} = useRequest();
+const busy = ref(false);
+const error = ref('');
+const success = ref('');
+
+async function run(action, successKey = '') {
+  if (busy.value) return;
+  busy.value = true;
+  error.value = '';
+  success.value = '';
+  try {
+    const result = await action();
+    success.value = successKey;
+    return result;
+  } catch (failure) {
+    error.value = /^(account|workspace|billing)\.[a-zA-Z]+$/.test(failure.message)
+      ? failure.message
+      : 'workspace.requestError';
+  } finally {
+    busy.value = false;
+  }
+}
+
 const loaded = ref(false), form = reactive({plotId: route.params.id ?? null, email: '', role: 'COLLABORATOR'});
 const members = computed(() => store.members.filter(item => String(item.plotId) === String(form.plotId)));
 const invitations = computed(() => store.invitations.filter(item => String(item.plotId) === String(form.plotId)));

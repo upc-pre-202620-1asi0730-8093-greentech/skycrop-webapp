@@ -4,10 +4,30 @@ import {useI18n} from 'vue-i18n';
 import {useRoute, useRouter} from 'vue-router';
 import {useSubscriptionsStore} from '../../application/subscriptions.store.js';
 import {isActiveSubscription} from '../../domain/model/subscription-plan.js';
-import {useRequest} from '../../../shared/presentation/composables/use-request.js';
 import RequestStatus from '../../../shared/presentation/components/request-status.vue';
 const store = useSubscriptionsStore(), {t, n, d} = useI18n(), route = useRoute(), router = useRouter();
-const {busy, error, success, run} = useRequest();
+const busy = ref(false);
+const error = ref('');
+const success = ref('');
+
+async function run(action, successKey = '') {
+  if (busy.value) return;
+  busy.value = true;
+  error.value = '';
+  success.value = '';
+  try {
+    const result = await action();
+    success.value = successKey;
+    return result;
+  } catch (failure) {
+    error.value = /^(account|workspace|billing)\.[a-zA-Z]+$/.test(failure.message)
+      ? failure.message
+      : 'workspace.requestError';
+  } finally {
+    busy.value = false;
+  }
+}
+
 const loaded = ref(false), confirmed = ref(false), outcome = ref('APPROVED'), cancelId = ref(null);
 const selected = computed(() => store.plans.find(plan => String(plan.id) === String(route.params.planId)));
 const active = computed(() => store.subscriptions.find(item => isActiveSubscription(item)));

@@ -3,10 +3,30 @@ import {computed, onMounted, ref} from 'vue';
 import {useI18n} from 'vue-i18n';
 import {useNotificationsStore} from '../../application/notifications.store.js';
 import {notificationLink} from '../../domain/model/notification-link.js';
-import {useRequest} from '../../../shared/presentation/composables/use-request.js';
 import RequestStatus from '../../../shared/presentation/components/request-status.vue';
 const store = useNotificationsStore(), {t, d} = useI18n();
-const {busy, error, success, run} = useRequest();
+const busy = ref(false);
+const error = ref('');
+const success = ref('');
+
+async function run(action, successKey = '') {
+  if (busy.value) return;
+  busy.value = true;
+  error.value = '';
+  success.value = '';
+  try {
+    const result = await action();
+    success.value = successKey;
+    return result;
+  } catch (failure) {
+    error.value = /^(account|workspace|billing)\.[a-zA-Z]+$/.test(failure.message)
+      ? failure.message
+      : 'workspace.requestError';
+  } finally {
+    busy.value = false;
+  }
+}
+
 const filter = ref('all'), loaded = ref(false);
 const filtered = computed(() => store.notifications.filter(item => filter.value === 'all' || !item.read));
 async function load() { await run(async () => { await store.load(); loaded.value = true; }); }

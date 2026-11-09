@@ -46,10 +46,9 @@ Run `npm run build` to compile the application. Restart the development server o
 
 Reports use immutable value objects while preserving the existing published mock API
 and presentation contracts. See [Reports domain](docs/reports-domain.md) for the
-model, validation rules, JSDoc conventions, tests and backend integration differences.
+model, validation rules, JSDoc conventions and backend integration differences.
 
 ```sh
-npm test
 npm run check:reports-api
 ```
 
@@ -59,9 +58,4 @@ API repository is not required to consume the service already published on Azure
 ## Account and workspace views
 
 See [Workspace views](docs/workspace-views.md) for routes, Figma references, mock
-resource contracts, demonstration boundaries and desktop/mobile browser checks.
-
-```sh
-npx playwright install chromium
-npm run test:ui
-```
+resource contracts and integration boundaries.
