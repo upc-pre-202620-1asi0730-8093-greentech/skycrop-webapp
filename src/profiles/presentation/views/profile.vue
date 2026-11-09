@@ -3,10 +3,30 @@ import {onMounted, reactive, ref} from 'vue';
 import {useI18n} from 'vue-i18n';
 import {useProfileStore} from '../../application/profile.store.js';
 import {useSessionStore} from '../../../iam/application/session.store.js';
-import {useRequest} from '../../../shared/presentation/composables/use-request.js';
 import RequestStatus from '../../../shared/presentation/components/request-status.vue';
 const session = useSessionStore(), store = useProfileStore(), {t} = useI18n();
-const {busy, error, success, run} = useRequest();
+const busy = ref(false);
+const error = ref('');
+const success = ref('');
+
+async function run(action, successKey = '') {
+  if (busy.value) return;
+  busy.value = true;
+  error.value = '';
+  success.value = '';
+  try {
+    const result = await action();
+    success.value = successKey;
+    return result;
+  } catch (failure) {
+    error.value = /^(account|workspace|billing)\.[a-zA-Z]+$/.test(failure.message)
+      ? failure.message
+      : 'workspace.requestError';
+  } finally {
+    busy.value = false;
+  }
+}
+
 const ready = ref(false), form = reactive({name: '', phone: '', occupation: ''});
 async function load() {
   await run(async () => { await store.load(); Object.assign(form, store.profile ?? {}, {name: session.user.name}); ready.value = true; });

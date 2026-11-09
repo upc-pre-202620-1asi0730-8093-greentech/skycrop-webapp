@@ -1,15 +1,35 @@
 <script setup>
-import {computed, reactive, watch} from 'vue';
+import {computed, reactive, ref, watch} from 'vue';
 import {useRoute, useRouter} from 'vue-router';
 import {useI18n} from 'vue-i18n';
 import {useSessionStore} from '../../application/session.store.js';
 import {safeReturnPath} from '../../domain/model/navigation-policy.js';
-import {useRequest} from '../../../shared/presentation/composables/use-request.js';
 import RequestStatus from '../../../shared/presentation/components/request-status.vue';
 import LanguageSwitcher from '../../../shared/presentation/components/language-switcher.vue';
 import logo from '../../../assets/skycrop-logo.png';
 const route = useRoute(), router = useRouter(), session = useSessionStore(), {t} = useI18n();
-const {busy, error, success, run} = useRequest();
+const busy = ref(false);
+const error = ref('');
+const success = ref('');
+
+async function run(action, successKey = '') {
+  if (busy.value) return;
+  busy.value = true;
+  error.value = '';
+  success.value = '';
+  try {
+    const result = await action();
+    success.value = successKey;
+    return result;
+  } catch (failure) {
+    error.value = /^(account|workspace|billing)\.[a-zA-Z]+$/.test(failure.message)
+      ? failure.message
+      : 'workspace.requestError';
+  } finally {
+    busy.value = false;
+  }
+}
+
 const form = reactive({name: '', email: '', password: '', confirmPassword: '', acceptedTerms: false, code: ''});
 const mode = computed(() => route.name);
 watch(mode, () => { error.value = ''; success.value = ''; form.password = ''; form.confirmPassword = ''; form.code = ''; });
