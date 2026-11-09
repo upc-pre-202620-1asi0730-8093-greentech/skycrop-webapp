@@ -34,7 +34,6 @@ async function save() {
       <div class="form-field"><label for="preferred-language">{{ t('language') }}</label><pv-select input-id="preferred-language" v-model="form.language" :options="[{label: 'English', value: 'en'}, {label: 'Español', value: 'es'}]" option-label="label" option-value="value" /></div>
       <label class="check-field"><input v-model="form.emailNotifications" type="checkbox">{{ t('account.emailNotifications') }}</label>
       <label class="check-field"><input v-model="form.twoFactorEnabled" type="checkbox">{{ t('account.twoFactor') }}</label>
-      <p>{{ t('account.preferencesNotice') }}</p>
       <div class="form-actions"><pv-button type="submit" :label="t('workspace.save')" :disabled="busy" /></div>
     </form>
   </section>

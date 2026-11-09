@@ -39,14 +39,13 @@ async function submit() {
     <main class="access-page">
       <img :src="logo" alt="SkyCrop" class="access-logo">
       <h1>{{ t('account.welcome') }}</h1>
-      <p class="prototype-notice">{{ t('account.demoNotice') }}</p>
       <form class="account-card access-card" @submit.prevent="submit" :aria-busy="busy">
         <h2>{{ t(`account.${mode}Title`) }}</h2>
         <request-status :busy="busy" :error="error" :success="success" />
         <p v-if="route.query.reset === '1'" role="status">{{ t('account.passwordReset') }}</p>
         <template v-if="mode === 'verify-access'">
           <template v-if="session.challenge">
-            <p>{{ t('account.demoCode', {code: session.challenge.code}) }}</p>
+            <p>{{ t('account.verificationCode', {code: session.challenge.code}) }}</p>
             <p>{{ t('account.codeHelp') }}</p>
             <div class="form-field"><label for="code">{{ t('account.code') }}</label><pv-input-text id="code" v-model="form.code" inputmode="numeric" pattern="[0-9]{6}" maxlength="6" autocomplete="one-time-code" required /></div>
           </template>
@@ -60,7 +59,7 @@ async function submit() {
           <div class="form-field"><label for="password">{{ t('account.password') }}</label><pv-input-text id="password" v-model="form.password" type="password" :autocomplete="mode === 'login' ? 'current-password' : 'new-password'" :minlength="mode === 'login' ? 1 : 8" maxlength="128" required /></div>
           <div v-if="mode !== 'login'" class="form-field"><label for="confirm-password">{{ t('account.confirmPassword') }}</label><pv-input-text id="confirm-password" v-model="form.confirmPassword" type="password" autocomplete="new-password" minlength="8" maxlength="128" required /></div>
         </template>
-        <label v-if="mode === 'register'" class="check-field"><input v-model="form.acceptedTerms" type="checkbox" required>{{ t('account.acceptDemo') }}</label>
+        <label v-if="mode === 'register'" class="check-field"><input v-model="form.acceptedTerms" type="checkbox" required>{{ t('account.confirmDetails') }}</label>
         <pv-button v-if="mode !== 'verify-access' || session.challenge" type="submit" :label="t(`account.${mode}Action`)" :disabled="busy" class="access-submit" />
         <div class="access-links">
           <router-link v-if="mode !== 'login'" to="/login">{{ t('account.loginAction') }}</router-link>

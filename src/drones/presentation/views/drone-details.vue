@@ -178,7 +178,6 @@ watch(
       </div>
       <div v-else class="plot-card">
         <h2>{{ t('drones.connection') }}</h2>
-        <p>{{ t('drones.connectionHelp') }}</p>
         <p>{{ t('drones.serialNumber') }}: {{ drone.serialNumber }}</p>
         <p>{{ t('drones.status') }}: {{ t(`drones.${drone.status}`) }}</p>
         <pv-button

@@ -66,7 +66,7 @@ async function signIn(page, password = 'sample-password') {
 }
 
 async function enterChallenge(page) {
-  const codeText = await page.getByText(/Demonstration code:/).textContent();
+  const codeText = await page.getByText(/Verification code:/).textContent();
   await page.getByLabel('Verification code', {exact: true}).fill(codeText.match(/\d{6}/)[0]);
 }
 
@@ -105,12 +105,12 @@ test('registration, reload, routing, profile updates, locale and logout work wit
 test('recovery and two-step verification use expiring demo challenges and reject incorrect input', async ({page}) => {
   await mockWorkspace(page); await register(page);
   await page.goto('/settings');
-  await page.getByLabel('Two-step verification demonstration').check();
+  await page.getByLabel('Two-step verification').check();
   await page.getByRole('button', {name: 'Save changes'}).click();
   await expect(page.getByText('Changes saved.', {exact: true})).toBeVisible();
   await logout(page); await signIn(page);
   await expect(page).toHaveURL(/\/verify-access/);
-  const displayed = await page.getByText(/Demonstration code:/).textContent();
+  const displayed = await page.getByText(/Verification code:/).textContent();
   const invalidCode = displayed.includes('000000') ? '111111' : '000000';
   await page.getByLabel('Verification code').fill(invalidCode);
   await page.getByRole('button', {name: 'Verify code'}).click();
@@ -155,9 +155,9 @@ test('approved, declined and pending mock payments and cancellation preserve sta
   for (const status of ['DECLINED', 'PENDING', 'APPROVED']) {
     await page.goto('/subscriptions/checkout/basic');
     await page.getByRole('combobox').click();
-    await page.getByRole('option', {name: `${status.charAt(0)}${status.slice(1).toLowerCase()} (demonstration)`, exact: true}).click();
+    await page.getByRole('option', {name: `${status.charAt(0)}${status.slice(1).toLowerCase()}`, exact: true}).click();
     await page.getByRole('checkbox').check();
-    await page.getByRole('button', {name: 'Simulate payment'}).click();
+    await page.getByRole('button', {name: 'Record payment'}).click();
     await expect(page).toHaveURL(/\/subscriptions\/payments\//);
     await expect(page.getByRole('heading', {name: new RegExp(status.charAt(0) + status.slice(1).toLowerCase())})).toBeVisible();
     expect(database.payments.at(-1).status).toBe(status);
@@ -179,7 +179,7 @@ test('invitations avoid duplicates and notification actions stay within the appl
   await register(page); await page.goto('/plot-members');
   await page.getByLabel('Email', {exact: true}).fill('guest@example.test');
   await page.getByRole('button', {name: 'Invite a member', exact: true}).click();
-  await expect(page.getByText('Demonstration invitation recorded.', {exact: true})).toBeVisible();
+  await expect(page.getByText('Invitation recorded.', {exact: true})).toBeVisible();
   await page.getByLabel('Email', {exact: true}).fill('GUEST@example.test');
   await page.getByRole('button', {name: 'Invite a member', exact: true}).click();
   await expect(page.getByRole('alert')).toContainText('A pending invitation already exists');

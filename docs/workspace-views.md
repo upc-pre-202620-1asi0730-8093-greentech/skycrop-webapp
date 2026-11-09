@@ -81,7 +81,7 @@ are still unsuitable as a production identity service. A non-sensitive identity
 projection is stored in sessionStorage for eight hours; no token is invented.
 
 Recovery and second-factor codes exist only in application memory, are displayed
-explicitly as demonstration codes, expire after five minutes and allow five
+on the verification screen, expire after five minutes and allow five
 attempts. Reloading discards a pending challenge. Recovery of an unknown account
 uses the same visible flow and does not update a user. No email is sent. These
 flows must be replaced with server-issued private challenges and real access
@@ -115,3 +115,10 @@ profile updates, named crop routing, recovery, second-factor access, localizatio
 empty and failed loads, payment outcomes, cancellation, duplicate invitations,
 notification filtering and viewport overflow. It never writes to the published
 mock API. Screenshots and traces stay under ignored `test-results/`.
+
+## Interface copy
+
+Development and demonstration banners are omitted from application views.
+Operational feedback, code validity, errors and data-source indicators remain.
+Payment controls describe recording a payment status; they do not claim to
+process a bank charge. The mock limitations above remain unchanged.
