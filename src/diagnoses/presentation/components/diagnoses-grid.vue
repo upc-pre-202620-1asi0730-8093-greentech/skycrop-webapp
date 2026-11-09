@@ -14,21 +14,22 @@ const plotName = (id) =>
     plots.value.find((item) => String(item.id) === String(id))?.name || t('diagnoses.unavailable');
 
 const date = (value) =>
-    new Intl.DateTimeFormat(locale.value, {dateStyle: 'short', timeStyle: 'short'}).format(
+    Number.isFinite(Date.parse(value)) ? new Intl.DateTimeFormat(locale.value, {dateStyle: 'short', timeStyle: 'short'}).format(
         new Date(value),
-    );
+    ) : t('diagnoses.unavailable');
 
 const severity = (anomalies) => anomalies[0]?.severity;
 
 onMounted(() => {
   diagnosesStore.fetchDiagnoses();
-  console.log(diagnoses);
 });
 
 </script>
 
 
 <template>
+  <p v-if="loading" role="status">{{ t('diagnoses.loading') }}</p>
+  <div v-else-if="error" class="error-message" role="alert"><p>{{ t(error) }}</p><pv-button :label="t('workspace.retry')" @click="diagnosesStore.fetchDiagnoses()" /></div>
 
   <template v-if="!loading && (!error)"
   ><p v-if="!diagnoses.length" class="empty-state">
@@ -37,7 +38,7 @@ onMounted(() => {
     <div v-else class="diagnoses-grid">
 
       <article
-          v-for="diagnostic in diagnoses"
+          v-for="diagnostic in diagnoses.slice(0, 3)"
           :key="diagnostic.id"
 
       >

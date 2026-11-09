@@ -2,16 +2,19 @@
 import {useI18n} from 'vue-i18n';
 import PlotsSlider from "../../../plots/presentation/components/plots-slider.vue";
 import DiagnosesGrid from "../../../diagnoses/presentation/components/diagnoses-grid.vue";
+import {useSessionStore} from '../../../iam/application/session.store.js';
+import {useReportsStore} from '../../../reports/application/reports.store.js';
+import {computed, onMounted} from 'vue';
 const {t} = useI18n();
+const session = useSessionStore(), reports = useReportsStore();
+onMounted(() => reports.load());
+const latestReportPath = computed(() => reports.reports.length ? `/reports/${reports.reports[0].id}` : '/reports');
 
-const actions = [
+const actions = computed(() => [
   {label: 'home.quickActions.registerDrone', to: '/drones/new'},
-  {label: 'home.quickActions.seeReports', to: '/reports'},
-  {label: 'home.quickActions.seeDiagnoses', to: '/diagnoses'},
-]
-
-//TODO: Get user's name once IAM is implemented
-const username = 'User'
+  {label: 'home.quickActions.seeReports', to: latestReportPath.value},
+  {label: 'home.quickActions.inviteMembers', to: '/plot-members'},
+])
 
 </script>
 
@@ -21,7 +24,7 @@ const username = 'User'
 <template>
 
   <section>
-    <h1>{{t('home.welcome', {user: `${username}`})}}</h1>
+    <h1>{{t('home.welcome', {user: session.user?.name ?? ''})}}</h1>
   </section>
 
 
