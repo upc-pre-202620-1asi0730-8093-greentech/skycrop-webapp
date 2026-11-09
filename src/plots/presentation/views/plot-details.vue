@@ -47,7 +47,7 @@ function formatDate(value) {
             <dt>{{ t('plots.status') }}</dt><dd>{{ t(plot.status === 'ACTIVE' ? 'plots.active' : 'plots.inactive') }}</dd>
             <dt>{{ t('plots.registeredOn') }}</dt><dd>{{ formatDate(plot.createdAt) }}</dd>
           </dl>
-          <router-link :to="`/plots/${plot.id}/crops`">{{ t('plots.cropsLink') }}</router-link>
+          <div class="plot-card-actions"><router-link :to="`/plots/${plot.id}/crops`">{{ t('plots.cropsLink') }}</router-link><router-link :to="`/plots/${plot.id}/members`">{{ t('workspace.members') }}</router-link></div>
         </div>
         <div class="plot-card">
           <h2>{{ t('plots.location') }}</h2>

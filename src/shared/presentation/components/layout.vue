@@ -1,12 +1,14 @@
 <script setup>
     import {ref} from 'vue';
-    import {useRoute} from 'vue-router';
+    import {useRoute, useRouter} from 'vue-router';
+    import {useSessionStore} from '../../../iam/application/session.store.js';
     import {watch} from 'vue';
     import {useI18n} from 'vue-i18n';
     import skycropLogo from '../../../assets/skycrop-logo.png';
     import LanguageSwitcher from './language-switcher.vue';
     const {t} = useI18n();
-    const route = useRoute();
+    const route = useRoute(), router = useRouter(), session = useSessionStore();
+    async function logout() { session.logout(); await router.replace('/login'); }
     const menuOpen = ref(false);
     const menuCollapsed = ref(false);
     function toggleMenu() {
@@ -15,13 +17,16 @@
     }
     watch(() => route.fullPath, () => { menuOpen.value = false; });
 
-    //TODO: Add Profiles and Settings navigation once their corresponding views are implemented
     const items = [
         {label: 'navigation.home', to: '/home'},
+        {label: 'navigation.profile', to: '/profiles'},
         {label: 'navigation.plots', to: '/plots'},
         {label: 'navigation.drones', to: '/drones'},
         {label: 'navigation.diagnoses', to: '/diagnoses'},
-        {label: 'navigation.reports', to: '/reports'}
+        {label: 'navigation.reports', to: '/reports'},
+        {label: 'navigation.subscriptions', to: '/subscriptions'},
+        {label: 'navigation.notifications', to: '/notifications'},
+        {label: 'navigation.settings', to: '/settings'}
     ];
 </script>
 
@@ -36,7 +41,7 @@
                     <router-link class="title-skycrop" to="/plots"><img :src="skycropLogo" alt="" class="brand-logo" />SkyCrop</router-link>
                 </template>
                 <template #end>
-                    <language-switcher />
+                    <div class="account-toolbar"><language-switcher /><router-link to="/profiles" class="account-identity"><i class="pi pi-user" aria-hidden="true"></i><span>{{ session.user?.name }}</span></router-link><button class="logout-button" type="button" @click="logout" :aria-label="t('account.logout')"><i class="pi pi-sign-out" aria-hidden="true"></i></button></div>
                 </template>
             </pv-toolbar>
         </header>

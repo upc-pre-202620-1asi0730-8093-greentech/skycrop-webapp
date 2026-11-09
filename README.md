@@ -55,3 +55,13 @@ npm run check:reports-api
 
 The API check sends only GET to the configured reports collection. Cloning the mock
 API repository is not required to consume the service already published on Azure.
+
+## Account and workspace views
+
+See [Workspace views](docs/workspace-views.md) for routes, Figma references, mock
+resource contracts, demonstration boundaries and desktop/mobile browser checks.
+
+```sh
+npx playwright install chromium
+npm run test:ui
+```
