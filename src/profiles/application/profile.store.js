@@ -1,6 +1,7 @@
 import {defineStore} from 'pinia';
 import {ref} from 'vue';
 import {ProfilesApi} from '../infrastructure/profiles-api.js';
+import {ProfileAssembler} from '../infrastructure/profile.assembler.js';
 import {useSessionStore} from '../../iam/application/session.store.js';
 import {ProfileDetails} from '../domain/model/profile-details.js';
 
@@ -14,29 +15,24 @@ export const useProfileStore = defineStore('profile', () => {
     const userId = useSessionStore().user.id;
 
     profile.value = null;
-    profile.value = await profilesApi.getProfileByUserId(userId);
+
+    const resource = await profilesApi.getProfileByUserId(userId);
+    profile.value = ProfileAssembler.toModelFromResource(resource);
   }
 
   async function save(fields) {
     const userId = useSessionStore().user.id;
     const details = new ProfileDetails(fields);
+    const resource = ProfileAssembler.toResourceFromDetails(
+        userId,
+        details,
+    );
 
-    const allowed = {
-      userId,
-      phone: details.phone,
-      occupation: details.occupation,
-      language: details.language,
-      emailNotifications: details.emailNotifications,
-    };
+    const savedResource = profile.value?.id != null
+        ? await profilesApi.updateProfile(profile.value.id, resource)
+        : await profilesApi.createProfile(resource);
 
-    if (profile.value?.id != null) {
-      profile.value = await profilesApi.updateProfile(
-          profile.value.id,
-          allowed,
-      );
-    } else {
-      profile.value = await profilesApi.createProfile(allowed);
-    }
+    profile.value = ProfileAssembler.toModelFromResource(savedResource);
   }
 
   async function setTwoFactor(enabled) {
