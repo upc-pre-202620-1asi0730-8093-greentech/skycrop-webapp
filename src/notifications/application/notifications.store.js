@@ -1,22 +1,42 @@
 import {defineStore} from 'pinia';
 import {ref} from 'vue';
-import {CollectionApi} from '../../shared/infrastructure/collection-api.js';
+import {NotificationsApi} from '../infrastructure/notifications-api.js';
 import {useSessionStore} from '../../iam/application/session.store.js';
-const api = new CollectionApi();
 
-/** User-scoped notification inbox. Mock resources do not deliver push or email. */
+const notificationsApi = new NotificationsApi();
+
+/** Coordinates notification state, ordering and read actions. */
 export const useNotificationsStore = defineStore('notifications', () => {
   const notifications = ref([]);
+
   async function load() {
     const userId = useSessionStore().user.id;
-    notifications.value = (await api.list('notifications', {userId}))
-      .filter(item => String(item.userId) === String(userId))
-      .sort((a, b) => (Date.parse(b.createdAt) || 0) - (Date.parse(a.createdAt) || 0));
+    const resources = await notificationsApi.getNotificationsByUserId(userId);
+
+    notifications.value = resources.sort(
+        (first, second) =>
+            (Date.parse(second.createdAt) || 0) -
+            (Date.parse(first.createdAt) || 0),
+    );
   }
+
   async function markRead(id) {
-    if (!notifications.value.some(item => String(item.id) === String(id))) return;
-    const updated = await api.patch('notifications', id, {read: true, readAt: new Date().toISOString()});
-    notifications.value = notifications.value.map(item => String(item.id) === String(id) ? updated : item);
+    const exists = notifications.value.some(
+        notification => String(notification.id) === String(id),
+    );
+
+    if (!exists) return;
+
+    const readAt = new Date().toISOString();
+    const updated = await notificationsApi.markNotificationAsRead(id, readAt);
+
+    notifications.value = notifications.value.map(
+        notification =>
+            String(notification.id) === String(id)
+                ? updated
+                : notification,
+    );
   }
+
   return {notifications, load, markRead};
 });
