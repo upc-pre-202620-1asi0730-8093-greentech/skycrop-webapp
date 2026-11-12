@@ -2,6 +2,7 @@ import {defineStore} from 'pinia';
 import {ref} from 'vue';
 import {ProfilesApi} from '../infrastructure/profiles-api.js';
 import {useSessionStore} from '../../iam/application/session.store.js';
+import {ProfileDetails} from '../domain/model/profile-details.js';
 
 const profilesApi = new ProfilesApi();
 
@@ -18,12 +19,14 @@ export const useProfileStore = defineStore('profile', () => {
 
   async function save(fields) {
     const userId = useSessionStore().user.id;
+    const details = new ProfileDetails(fields);
+
     const allowed = {
       userId,
-      phone: fields.phone?.trim() ?? '',
-      occupation: fields.occupation?.trim() ?? '',
-      language: fields.language ?? 'en',
-      emailNotifications: Boolean(fields.emailNotifications),
+      phone: details.phone,
+      occupation: details.occupation,
+      language: details.language,
+      emailNotifications: details.emailNotifications,
     };
 
     if (profile.value?.id != null) {
