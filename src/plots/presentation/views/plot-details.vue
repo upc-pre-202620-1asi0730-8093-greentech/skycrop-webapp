@@ -21,7 +21,10 @@ function formatDate(value) {
 
 <template>
   <section class="plots-page" :aria-busy="loading">
-    <router-link to="/plots">{{ t('plots.back') }}</router-link>
+    <router-link class="action-link back-link" to="/plots">
+      <i class="pi pi-arrow-left" aria-hidden="true"></i>
+      <span>{{ t('plots.back') }}</span>
+    </router-link>
     <p v-if="loading" role="status">{{ t('plots.loadingDetails') }}</p>
     <div v-else-if="error" class="error-message" role="alert">
       <p>{{ t(error) }}</p>
@@ -47,7 +50,23 @@ function formatDate(value) {
             <dt>{{ t('plots.status') }}</dt><dd>{{ t(plot.status === 'ACTIVE' ? 'plots.active' : 'plots.inactive') }}</dd>
             <dt>{{ t('plots.registeredOn') }}</dt><dd>{{ formatDate(plot.createdAt) }}</dd>
           </dl>
-          <div class="plot-card-actions"><router-link :to="`/plots/${plot.id}/crops`">{{ t('plots.cropsLink') }}</router-link><router-link :to="`/plots/${plot.id}/members`">{{ t('workspace.members') }}</router-link></div>
+          <div class="plot-card-actions">
+            <router-link
+                class="action-link"
+                :to="`/plots/${plot.id}/crops`"
+            >
+              <i class="pi pi-leaf" aria-hidden="true"></i>
+              <span>{{ t('plots.cropsLink') }}</span>
+            </router-link>
+
+            <router-link
+                class="action-link"
+                :to="`/plots/${plot.id}/members`"
+            >
+              <i class="pi pi-users" aria-hidden="true"></i>
+              <span>{{ t('workspace.members') }}</span>
+            </router-link>
+          </div>
         </div>
         <div class="plot-card">
           <h2>{{ t('plots.location') }}</h2>
