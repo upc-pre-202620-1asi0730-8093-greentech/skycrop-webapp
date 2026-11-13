@@ -5,7 +5,10 @@ import {useRoute, useRouter} from 'vue-router';
 import {useSubscriptionsStore} from '../../application/subscriptions.store.js';
 import {isActiveSubscription} from '../../domain/model/subscription-plan.js';
 import RequestStatus from '../../../shared/presentation/components/request-status.vue';
-const store = useSubscriptionsStore(), {t, n, d} = useI18n(), route = useRoute(), router = useRouter();
+const store = useSubscriptionsStore();
+const {t, n, d, locale} = useI18n();
+const route = useRoute();
+const router = useRouter();
 const busy = ref(false);
 const error = ref('');
 const success = ref('');
@@ -41,6 +44,38 @@ async function pay() {
   await run(async () => { const payment = await store.purchase(selected.value.id, outcome.value); await router.push(`/subscriptions/payments/${payment.id}`); });
 }
 async function cancel() { await run(async () => { await store.cancel(cancelId.value); cancelId.value = null; }, 'billing.cancelled'); }
+function paymentTimestamp(payment) {
+  const timestamp = Date.parse(payment.createdAt);
+  return Number.isFinite(timestamp) ? timestamp : null;
+}
+
+function paymentDate(payment) {
+  const timestamp = paymentTimestamp(payment);
+
+  if (timestamp === null) return t('billing.unavailable');
+
+  return new Intl.DateTimeFormat(locale.value, {
+    dateStyle: 'medium',
+    timeStyle: 'short',
+  }).format(new Date(timestamp));
+}
+
+function paymentPlan(payment) {
+  const subscription = store.subscriptions.find(
+      item => payment.subscriptionId != null &&
+          String(item.id) === String(payment.subscriptionId),
+  );
+
+  return subscription?.planName || t('billing.unavailable');
+}
+
+const paymentHistory = computed(() =>
+    [...store.payments].sort(
+        (first, second) =>
+            (paymentTimestamp(second) ?? -Infinity) -
+            (paymentTimestamp(first) ?? -Infinity),
+    ),
+);
 </script>
 <template>
   <section class="plots-page account-page">
@@ -51,8 +86,39 @@ async function cancel() { await run(async () => { await store.cancel(cancelId.va
       <template v-if="resultPage">
         <article v-if="result" class="account-card profile-card">
           <h2>{{ t(`billing.${result.status}`) }}</h2>
-          <p>{{ t('billing.reference') }}: {{ result.id }}</p>
-          <p>{{ n(result.amount, {style: 'currency', currency: result.currency}) }}</p>
+
+          <dl class="payment-details">
+            <div>
+              <dt>{{ t('billing.amount') }}</dt>
+              <dd class="payment-amount">
+                {{ n(result.amount, {
+                style: 'currency',
+                currency: result.currency,
+              }) }}
+              </dd>
+            </div>
+
+            <div>
+              <dt>{{ t('billing.transactionDate') }}</dt>
+              <dd>{{ paymentDate(result) }}</dd>
+            </div>
+
+            <div>
+              <dt>{{ t('billing.plan') }}</dt>
+              <dd>{{ paymentPlan(result) }}</dd>
+            </div>
+
+            <div>
+              <dt>{{ t('billing.reference') }}</dt>
+              <dd>{{ result.id }}</dd>
+            </div>
+
+            <div>
+              <dt>{{ t('billing.subscriptionReference') }}</dt>
+              <dd>{{ result.subscriptionId ?? t('billing.unavailable') }}</dd>
+            </div>
+          </dl>
+
           <p>{{ t('billing.paymentRecordHint') }}</p>
         </article>
         <p v-else class="empty-state">{{ t('billing.paymentNotFound') }}</p>
@@ -77,10 +143,17 @@ async function cancel() { await run(async () => { await store.cancel(cancelId.va
         <div v-if="store.plans.length" class="plot-grid"><article v-for="plan in store.plans" :key="plan.id" class="account-card"><h2>{{ plan.name }}</h2><p>{{ n(plan.price, {style: 'currency', currency: plan.currency}) }}</p><ul><li v-for="feature in plan.features" :key="feature">{{ feature }}</li></ul><router-link v-if="!active" class="action-link" :to="`/subscriptions/checkout/${plan.id}`">{{ t('billing.choose') }}</router-link></article></div>
         <p v-else class="empty-state">{{ t('billing.noPlans') }}</p>
         <h2>{{ t('billing.history') }}</h2>
-        <ul v-if="store.payments.length" class="activity-list"><li v-for="payment in store.payments" :key="payment.id"><router-link :to="`/subscriptions/payments/${payment.id}`">{{ t(`billing.${payment.status}`) }} · {{ n(payment.amount, {style: 'currency', currency: payment.currency}) }}</router-link></li></ul>
+        <ul v-if="paymentHistory.length" class="activity-list payment-history"><li v-for="payment in paymentHistory" :key="payment.id"><div class="payment-history-information"><div class="payment-history-heading"><h3>{{ paymentPlan(payment) }}</h3><span class="payment-status">{{ t(`billing.${payment.status}`) }}</span></div><p><strong>{{ t('billing.reference') }}:</strong>{{ payment.id }}</p><p><i class="pi pi-calendar" aria-hidden="true"></i>{{ paymentDate(payment) }}</p></div><div class="payment-history-actions"><strong class="payment-amount">{{ n(payment.amount, {style: 'currency', currency: payment.currency,}) }}</strong><router-link class="action-link" :to="`/subscriptions/payments/${payment.id}`" :aria-label="`${t('billing.viewTransaction')}: ${payment.id}`"><span>{{ t('billing.viewTransaction') }}</span><i class="pi pi-arrow-right" aria-hidden="true"></i></router-link></div></li></ul>
         <p v-else>{{ t('billing.noPayments') }}</p>
       </template>
-      <router-link v-if="checkout || resultPage" class="section-link" to="/subscriptions">{{ t('navigation.subscriptions') }}</router-link>
+      <router-link
+          v-if="checkout || resultPage"
+          class="action-link"
+          to="/subscriptions"
+      >
+        <i class="pi pi-arrow-left" aria-hidden="true"></i>
+        <span>{{ t('navigation.subscriptions') }}</span>
+      </router-link>
     </template>
   </section>
 </template>

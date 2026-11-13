@@ -396,6 +396,12 @@
     "invitationForbidden": "La cuenta no tiene permiso para administrar los miembros de esta parcela."
   },
   "billing": {
+    "transactionDate": "Fecha y hora",
+    "plan": "Plan",
+    "amount": "Importe",
+    "subscriptionReference": "Referencia de suscripción",
+    "viewTransaction": "Ver transacción",
+    "unavailable": "No disponible",
     "acquire": "Adquirir una suscripción",
     "paymentResult": "Resultado del pago",
     "reference": "Referencia",

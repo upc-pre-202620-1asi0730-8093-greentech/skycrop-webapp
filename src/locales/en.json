@@ -396,6 +396,12 @@
     "invitationForbidden": "This account cannot manage members of this plot."
   },
   "billing": {
+    "transactionDate": "Date and time",
+    "plan": "Plan",
+    "amount": "Amount",
+    "subscriptionReference": "Subscription reference",
+    "viewTransaction": "View transaction",
+    "unavailable": "Not available",
     "acquire": "Acquire a subscription",
     "paymentResult": "Payment result",
     "reference": "Reference",
