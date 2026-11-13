@@ -578,3 +578,35 @@ a:focus-visible, button:focus-visible { outline: 3px solid #1976a8; outline-offs
     gap: 20px;
   }
 }
+/* Subscription plan cards */
+.subscription-plan-card {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.subscription-plan-card h3 {
+  margin: 0;
+  font-size: 1.5rem;
+}
+
+.subscription-plan-price {
+  margin: 0 0 4px;
+  font-size: 2rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.subscription-plan-features {
+  flex: 1;
+  margin: 0;
+  padding-left: 20px;
+}
+
+.subscription-plan-features li {
+  margin-bottom: 10px;
+}
+
+.subscription-plan-card > .action-link {
+  align-self: flex-start;
+}

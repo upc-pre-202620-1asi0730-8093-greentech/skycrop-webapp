@@ -140,7 +140,40 @@ const paymentHistory = computed(() =>
         <p v-else>{{ t('billing.noActive') }}</p>
         <div v-if="cancelId != null" class="empty-state" role="group" :aria-label="t('billing.cancel')"><p>{{ t('billing.cancelConfirm') }}</p><div class="form-actions"><pv-button :label="t('workspace.keep')" @click="cancelId = null" :disabled="busy" /><pv-button :label="t('billing.cancel')" @click="cancel" :disabled="busy" /></div></div>
         <h2>{{ t('billing.plans') }}</h2>
-        <div v-if="store.plans.length" class="plot-grid"><article v-for="plan in store.plans" :key="plan.id" class="account-card"><h2>{{ plan.name }}</h2><p>{{ n(plan.price, {style: 'currency', currency: plan.currency}) }}</p><ul><li v-for="feature in plan.features" :key="feature">{{ feature }}</li></ul><router-link v-if="!active" class="action-link" :to="`/subscriptions/checkout/${plan.id}`">{{ t('billing.choose') }}</router-link></article></div>
+        <div v-if="store.plans.length" class="plot-grid">
+          <article
+              v-for="plan in store.plans"
+              :key="plan.id"
+              class="account-card subscription-plan-card"
+          >
+            <h3>{{ plan.name }}</h3>
+
+            <div>
+              <p class="subscription-plan-price">
+                {{ n(plan.price, {
+                style: 'currency',
+                currency: plan.currency,
+              }) }}
+              </p>
+              <span>{{ t('billing.monthlyPrice') }}</span>
+            </div>
+
+            <ul class="subscription-plan-features">
+              <li v-for="feature in plan.features" :key="feature">
+                {{ feature }}
+              </li>
+            </ul>
+
+            <router-link
+                v-if="!active"
+                class="action-link"
+                :to="`/subscriptions/checkout/${plan.id}`"
+            >
+              <span>{{ t('billing.choose') }}</span>
+              <i class="pi pi-arrow-right" aria-hidden="true"></i>
+            </router-link>
+          </article>
+        </div>
         <p v-else class="empty-state">{{ t('billing.noPlans') }}</p>
         <h2>{{ t('billing.history') }}</h2>
         <ul v-if="paymentHistory.length" class="activity-list payment-history"><li v-for="payment in paymentHistory" :key="payment.id"><div class="payment-history-information"><div class="payment-history-heading"><h3>{{ paymentPlan(payment) }}</h3><span class="payment-status">{{ t(`billing.${payment.status}`) }}</span></div><p><strong>{{ t('billing.reference') }}:</strong>{{ payment.id }}</p><p><i class="pi pi-calendar" aria-hidden="true"></i>{{ paymentDate(payment) }}</p></div><div class="payment-history-actions"><strong class="payment-amount">{{ n(payment.amount, {style: 'currency', currency: payment.currency,}) }}</strong><router-link class="action-link" :to="`/subscriptions/payments/${payment.id}`" :aria-label="`${t('billing.viewTransaction')}: ${payment.id}`"><span>{{ t('billing.viewTransaction') }}</span><i class="pi pi-arrow-right" aria-hidden="true"></i></router-link></div></li></ul>
