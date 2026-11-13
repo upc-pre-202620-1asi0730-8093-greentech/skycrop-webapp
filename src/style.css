@@ -125,6 +125,54 @@ a:focus-visible, button:focus-visible { outline: 3px solid #1976a8; outline-offs
 }
 
 /* Registered Crops */
+
+.crop-summary-card {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.crop-summary-card h2 {
+  margin: 0;
+}
+
+.crop-summary-facts {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+  margin: 0;
+}
+
+.crop-summary-facts > div {
+  min-width: 0;
+}
+
+.crop-summary-facts dt {
+  margin-bottom: 4px;
+  font-weight: 600;
+}
+
+.crop-summary-facts dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.crop-summary-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: auto;
+}
+
+@media (max-width: 600px) {
+  .crop-summary-facts {
+    grid-template-columns: 1fr;
+  }
+
+  .crop-summary-actions .action-link {
+    width: 100%;
+  }
+}
+
 .crop-list-header {
   display: flex;
   justify-content: space-between;

@@ -140,17 +140,42 @@ onMounted(() => {
           <article
               v-for="crop in filteredCrops"
               :key="crop.id"
-              class="plot-card registered-plot"
+              class="plot-card crop-summary-card"
           >
             <h2>{{ crop.name }}</h2>
-            <p>{{ t('crops.variety') }}: {{ crop.variety }}</p>
-            <p>{{ t('crops.plantingDate') }}: {{ crop.plantingDate }}</p>
-            <p>{{ t('crops.expectedHarvest') }}: {{ crop.expectedHarvest || '-' }}</p>
-            <p>{{ t('crops.status') }}: {{ cropStatus(crop.status) }}</p>
 
-            <router-link :to="`/plots/${plot.id}/crops/${crop.id}`">
-              {{ t('crops.details') }}
-            </router-link>
+            <dl class="crop-summary-facts">
+              <div>
+                <dt>{{ t('crops.variety') }}</dt>
+                <dd>{{ crop.variety }}</dd>
+              </div>
+
+              <div>
+                <dt>{{ t('crops.plantingDate') }}</dt>
+                <dd>{{ crop.plantingDate }}</dd>
+              </div>
+
+              <div>
+                <dt>{{ t('crops.expectedHarvest') }}</dt>
+                <dd>{{ crop.expectedHarvest || '-' }}</dd>
+              </div>
+
+              <div>
+                <dt>{{ t('crops.status') }}</dt>
+                <dd>{{ cropStatus(crop.status) }}</dd>
+              </div>
+            </dl>
+
+            <div class="crop-summary-actions">
+              <router-link
+                  class="action-link"
+                  :to="`/plots/${plot.id}/crops/${crop.id}`"
+                  :aria-label="`${t('crops.details')}: ${crop.name}`"
+              >
+                <span>{{ t('crops.details') }}</span>
+                <i class="pi pi-arrow-right" aria-hidden="true"></i>
+              </router-link>
+            </div>
           </article>
         </div>
       </template>
