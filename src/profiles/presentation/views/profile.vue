@@ -53,6 +53,9 @@ async function save() {
       <div class="form-field"><label for="occupation">{{ t('account.occupation') }}</label><pv-input-text id="occupation" v-model="form.occupation" maxlength="120" /></div>
       <div class="form-actions"><pv-button type="submit" :label="t('workspace.save')" :disabled="busy" /></div>
     </form>
-    <router-link class="section-link" to="/subscriptions">{{ t('navigation.subscriptions') }}</router-link>
-  </section>
+    <router-link class="action-link" to="/subscriptions">
+      <i class="pi pi-credit-card" aria-hidden="true"></i>
+      <span>{{ t('navigation.subscriptions') }}</span>
+      <i class="pi pi-arrow-right" aria-hidden="true"></i>
+    </router-link>  </section>
 </template>
