@@ -23,7 +23,10 @@ watch(
 </script>
 <template>
   <section class="plots-page diagnoses-page" :aria-busy="store.loading">
-    <router-link class="back-link" to="/diagnoses">{{ t('diagnoses.back') }}</router-link>
+    <router-link class="action-link back-link" to="/diagnoses">
+      <i class="pi pi-arrow-left" aria-hidden="true"></i>
+      <span>{{ t('diagnoses.back') }}</span>
+    </router-link>
     <h1>{{ t('diagnoses.detailsTitle') }}</h1>
     <p v-if="store.loading" role="status">{{ t('plots.loading') }}</p>
     <p v-else-if="store.notFound" class="empty-state">{{ t('diagnoses.notFound') }}</p>
