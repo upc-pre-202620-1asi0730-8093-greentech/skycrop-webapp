@@ -55,8 +55,10 @@ watch(
 </script>
 <template>
   <section class="plots-page drones-page" :aria-busy="store.loading">
-    <router-link class="back-link" to="/drones">{{ t('drones.back') }}</router-link>
-    <h1>{{ t('drones.information') }}</h1>
+    <router-link class="action-link back-link" to="/drones">
+      <i class="pi pi-arrow-left" aria-hidden="true"></i>
+      <span>{{ t('drones.back') }}</span>
+    </router-link>    <h1>{{ t('drones.information') }}</h1>
     <p v-if="store.loading" role="status">{{ t('plots.loading') }}</p>
     <p v-else-if="store.notFound" class="empty-state">{{ t('drones.notFound') }}</p>
     <div v-else-if="!drone" role="alert" class="error-message">
