@@ -78,16 +78,20 @@ onMounted(() => {
 
 <template>
   <section class="plots-page crop-details">
-    <p class="mb-3">
-      <router-link to="/plots">
-        {{ t('navigation.plots') }}
+    <div class="page-navigation">
+      <router-link class="action-link" to="/plots">
+        <i class="pi pi-map" aria-hidden="true"></i>
+        <span>{{ t('navigation.plots') }}</span>
       </router-link>
-      /
-      <router-link :to="`/plots/${route.params.id}/crops`">
-        {{ t('crops.title') }}
+
+      <router-link
+          class="action-link"
+          :to="`/plots/${route.params.id}/crops`"
+      >
+        <i class="pi pi-arrow-left" aria-hidden="true"></i>
+        <span>{{ t('crops.title') }}</span>
       </router-link>
-      / {{ t('crops.details') }}
-    </p>
+    </div>
 
     <div class="page-heading">
       <h1>{{ t('crops.details') }}</h1>

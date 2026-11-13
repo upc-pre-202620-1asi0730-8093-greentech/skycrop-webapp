@@ -276,8 +276,20 @@ a:focus-visible, button:focus-visible { outline: 3px solid #1976a8; outline-offs
 .registered-plot .plot-card-actions a { padding: 6px 12px; font-size: 14px; }
 .plot-detail-grid .plot-image { margin-bottom: 24px; height: 220px; }
 .plot-detail-grid .plot-details { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
-.back-link { display: inline-block; margin-bottom: 16px; }
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 16px;
+}
 
+.page-navigation {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 24px;
+}
 @media (max-width: 1100px) {
   .plot-list-page .plot-grid { grid-template-columns: 1fr; }
 }

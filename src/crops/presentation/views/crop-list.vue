@@ -56,10 +56,20 @@ onMounted(() => {
 
 <template>
   <section class="plots-page" :aria-busy="plotsLoading || cropsLoading">
-    <p class="mb-3">
-      <router-link to="/plots">{{ t('navigation.plots') }}</router-link>
-      / {{ plot?.name || route.params.id }} / {{ t('crops.title') }}
-    </p>
+    <div class="page-navigation">
+      <router-link class="action-link" to="/plots">
+        <i class="pi pi-arrow-left" aria-hidden="true"></i>
+        <span>{{ t('navigation.plots') }}</span>
+      </router-link>
+
+      <router-link
+          class="action-link"
+          :to="`/plots/${route.params.id}`"
+      >
+        <i class="pi pi-map-marker" aria-hidden="true"></i>
+        <span>{{ plot?.name || route.params.id }}</span>
+      </router-link>
+    </div>
 
     <div class="page-heading">
       <h1>{{ t('crops.listTitle') }}</h1>
