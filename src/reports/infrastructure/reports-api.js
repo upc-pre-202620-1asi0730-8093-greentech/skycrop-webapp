@@ -1,16 +1,30 @@
-import axios from 'axios';
-export class ReportsApi {
-  #http;
-  constructor(baseURL = import.meta.env.VITE_SKYCROP_API_URL) {
-    this.#http = axios.create({baseURL, timeout: 15000});
+import {BaseApi} from "../../shared/infrastructure/base-api.js";
+import {BaseEndpoint} from "../../shared/infrastructure/base-endpoint.js";
+
+const reportsEndpoint = import.meta.env.VITE_SKYCROP_REPORTS_ENDPOINT_PATH;
+
+/** Reports transport using the configured shared API base URL and collection path. */
+export class ReportsApi extends BaseApi {
+  #reportsEndpoint;
+
+  constructor() {
+    super();
+    this.#reportsEndpoint = new BaseEndpoint(this, reportsEndpoint);
   }
-  getAll() {
-    return this.#http.get('/reports');
+
+  /** @returns {Promise<import('axios').AxiosResponse<object[]>>} Raw resources for the assembler. */
+  getReports() {
+    return this.#reportsEndpoint.getAll();
   }
-  getById(id) {
-    return this.#http.get(`/reports/${encodeURIComponent(id)}`);
+  /** @param {string|number} id @returns {Promise<import('axios').AxiosResponse<object>>} */
+  getReportById(id) {
+    return this.#reportsEndpoint.getById(id);
   }
-  create(resource) {
-    return this.#http.post('/reports', resource);
+  /**
+   * @param {object} resource Primitive payload produced by ReportAssembler.
+   * @returns {Promise<import('axios').AxiosResponse<object>>} Persisted resource with its ID.
+   */
+  createReport(resource) {
+    return this.#reportsEndpoint.create(resource);
   }
 }

@@ -47,7 +47,10 @@ watch(
 </script>
 <template>
   <section class="plots-page reports-page" :aria-busy="store.loading">
-    <router-link class="back-link" to="/reports">{{ t('reports.back') }}</router-link>
+    <router-link class="action-link back-link" to="/reports">
+      <i class="pi pi-arrow-left" aria-hidden="true"></i>
+      <span>{{ t('reports.back') }}</span>
+    </router-link>
     <h1>{{ t('reports.detailsTitle') }}</h1>
     <p v-if="store.loading" role="status">{{ t('plots.loading') }}</p>
     <p v-else-if="store.notFound" class="empty-state">{{ t('reports.notFound') }}</p>

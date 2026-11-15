@@ -102,7 +102,6 @@ onMounted(() => store.fetchDiagnoses());
       @submit.prevent="generate"
     >
       <h2>{{ t('diagnoses.generate') }}</h2>
-      <p>{{ t('diagnoses.simulationHelp') }}</p>
       <p v-if="!plots.length">
         {{ t('diagnoses.needPlot') }}
         <router-link to="/plots/new">{{ t('plots.add') }}</router-link>

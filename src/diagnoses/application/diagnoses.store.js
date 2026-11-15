@@ -3,8 +3,15 @@ import {ref, shallowRef} from 'vue';
 import {DiagnosesApi} from '../infrastructure/diagnoses-api.js';
 import {DiagnosisAssembler} from '../infrastructure/diagnosis.assembler.js';
 import {diagnosisScenarios} from '../domain/model/diagnosis-scenarios.js';
+import {PlotsApi} from "../../plots/infrastructure/plots-api.js";
+import {DronesApi} from "../../drones/infrastructure/drones-api.js";
+
+const diagnosesApi = new DiagnosesApi();
+const plotsApi = new PlotsApi();
+const dronesApi = new DronesApi();
+
 export const useDiagnosesStore = defineStore('diagnoses', () => {
-  const api = new DiagnosesApi();
+
   const diagnoses = shallowRef([]),
     selectedDiagnosis = shallowRef(null),
     plots = shallowRef([]),
@@ -15,6 +22,8 @@ export const useDiagnosesStore = defineStore('diagnoses', () => {
     relatedError = ref(''),
     notFound = ref(false);
   let requestId = 0;
+
+
   async function fetchDiagnoses(id) {
     const request = ++requestId;
     loading.value = true;
@@ -22,17 +31,22 @@ export const useDiagnosesStore = defineStore('diagnoses', () => {
     relatedError.value = '';
     notFound.value = false;
     selectedDiagnosis.value = null;
+
     try {
-      const response = id === undefined ? await api.getAll() : await api.getById(id);
+      const response = id === undefined ? await diagnosesApi.getDiagnoses() : await diagnosesApi.getDiagnosticById(id);
+
       if (request !== requestId) return;
       if (id === undefined)
         diagnoses.value = DiagnosisAssembler.toEntitiesFromResponse(response).sort(
           (a, b) => Date.parse(b.generatedAt) - Date.parse(a.generatedAt),
         );
       else selectedDiagnosis.value = DiagnosisAssembler.toEntityFromResource(response.data);
+
       plots.value = [];
       flights.value = [];
-      const related = await Promise.allSettled([api.getPlots(), api.getFlights()]);
+
+      const related = await Promise.allSettled([plotsApi.getPlots(), dronesApi.getFlights()]);
+
       if (request !== requestId) return;
       if (related[0].status === 'fulfilled') plots.value = related[0].value.data;
       if (related[1].status === 'fulfilled') flights.value = related[1].value.data;
@@ -46,27 +60,33 @@ export const useDiagnosesStore = defineStore('diagnoses', () => {
       if (request === requestId) loading.value = false;
     }
   }
+
+
   async function registerDiagnosis(attributes) {
     if (saving.value) return null;
     saving.value = true;
     error.value = '';
+
     try {
       const scenario = diagnosisScenarios[attributes.scenario];
-      const currentPlots = (await api.getPlots()).data;
+      const currentPlots = (await plotsApi.getPlots()).data;
       const plot = currentPlots.find((item) => String(item.id) === String(attributes.plotId));
+
       if (!plot || !scenario) throw new Error('Invalid diagnosis selection');
       if (attributes.flightId != null) {
-        const flight = (await api.getFlights()).data.find(
+        const flight = (await dronesApi.getFlights()).data.find(
           (item) => String(item.id) === String(attributes.flightId),
         );
         if (!flight || String(flight.plotId) !== String(plot.id) || flight.status !== 'COMPLETED')
           throw new Error('Invalid flight');
       }
+
       const coordinates =
         Number.isFinite(plot.latitude) &&
         Math.abs(plot.latitude) <= 90 &&
         Number.isFinite(plot.longitude) &&
         Math.abs(plot.longitude) <= 180;
+
       const anomalies = scenario.type
         ? [
             {
@@ -80,6 +100,7 @@ export const useDiagnosesStore = defineStore('diagnoses', () => {
             },
           ]
         : [];
+
       const resource = {
         generatedAt: new Date().toISOString(),
         plotId: plot.id,
@@ -91,11 +112,14 @@ export const useDiagnosesStore = defineStore('diagnoses', () => {
         status: 'COMPLETED',
         anomalies,
       };
+
       const entity = DiagnosisAssembler.toEntityFromResource(resource);
-      const response = await api.create(DiagnosisAssembler.toResourceFromEntity(entity));
+      const response = await diagnosesApi.createDiagnostic(DiagnosisAssembler.toResourceFromEntity(entity));
+
       const saved = DiagnosisAssembler.toEntityFromResource(response.data);
       diagnoses.value = [saved, ...diagnoses.value];
       return saved;
+
     } catch {
       error.value = 'diagnoses.saveError';
       return null;
@@ -103,6 +127,8 @@ export const useDiagnosesStore = defineStore('diagnoses', () => {
       saving.value = false;
     }
   }
+
+
   return {
     diagnoses,
     selectedDiagnosis,

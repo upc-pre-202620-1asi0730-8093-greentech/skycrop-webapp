@@ -34,10 +34,12 @@ async function submit() {
 </script>
 <template>
   <section class="plots-page drones-page">
-    <router-link class="back-link" to="/drones">{{ t('drones.back') }}</router-link>
-    <h1>{{ t('drones.register') }}</h1>
-    <form @submit.prevent="submit">
-      <fieldset class="plot-card drone-registration">
+    <router-link class="action-link back-link" to="/drones">
+      <i class="pi pi-arrow-left" aria-hidden="true"></i>
+      <span>{{ t('drones.back') }}</span>
+    </router-link>    <h1>{{ t('drones.register') }}</h1>
+    <form class="drone-registration" @submit.prevent="submit">
+      <fieldset class="plot-card">
         <legend>{{ t('plots.basicInformation') }}</legend>
         <div
           v-for="field in ['name', 'model', 'serialNumber', 'camera']"
@@ -90,7 +92,7 @@ async function submit() {
         </div>
       </fieldset>
       <p v-if="store.error" role="alert" class="error-message">{{ t(store.error) }}</p>
-      <div class="form-actions">
+      <div class="form-actions flex-wrap">
         <router-link to="/drones">{{ t('plots.cancel') }}</router-link
         ><pv-button
           type="submit"

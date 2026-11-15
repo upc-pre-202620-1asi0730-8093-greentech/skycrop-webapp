@@ -1,3 +1,13 @@
+/**
+ * Render a validated report with its metrics, NDVI chart and per-plot performance.
+ * Missing readings use the existing unavailable label. jsPDF is loaded only when
+ * an export is requested; report getters provide isolated primitive resources.
+ * @param {import('../domain/model/report.entity.js').Report} report
+ * @param {(key: string) => string} t Translation lookup for the current UI language.
+ * @param {string} locale Locale used to format dates and numbers.
+ * @returns {Promise<void>} Resolves after the PDF download has been requested.
+ * @throws {Error} When PDF loading, rendering or download fails.
+ */
 export async function downloadReportPdf(report, t, locale) {
   const {jsPDF} = await import('jspdf');
   const doc = new jsPDF();

@@ -1,32 +1,37 @@
-
 import {createRouter, createWebHistory} from 'vue-router';
+import home from './shared/presentation/views/home.vue';
+import reportsRoutes from './reports/presentation/reports-routes.js';
+import plotsRoutes from './plots/presentation/plots-routes.js';
+import cropsRoutes from './crops/presentation/crops-routes.js';
+import dronesRoutes from './drones/presentation/drones-routes.js';
+import diagnosesRoutes from './diagnoses/presentation/diagnoses-routes.js';
+import {useSessionStore} from './iam/application/session.store.js';
+import {sessionRedirect} from './iam/domain/model/navigation-policy.js';
 
-const pendingSection = () => import('./shared/presentation/views/pending-section.vue');
+const access = () => import('./iam/presentation/views/access.vue');
+const subscriptions = () => import('./subscriptions/presentation/views/subscriptions.vue');
+const plotMembers = () => import('./plots/presentation/views/plot-members.vue');
 
-const routes = [
-  {path: '/', redirect: '/plots'},
-  {path: '/home', name: 'home', component: pendingSection, props: {titleKey: 'navigation.home'}},
-  {path: '/profiles', name: 'profile', component: pendingSection, props: {titleKey: 'navigation.profile'}},
-  {path: '/drones', name: 'drones', component: () => import('./drones/presentation/views/drone-list.vue')},
-  {path: '/drones/new', name: 'drone-registration', component: () => import('./drones/presentation/views/drone-registration.vue')},
-  {path: '/drones/:id', name: 'drone-details', component: () => import('./drones/presentation/views/drone-details.vue')},
-  {path: '/diagnoses', name: 'diagnoses', component: () => import('./diagnoses/presentation/views/diagnoses-list.vue')},
-  {path: '/diagnoses/:id', name: 'diagnosis-details', component: () => import('./diagnoses/presentation/views/diagnosis-details.vue')},
-  {path: '/reports', name: 'reports', component: () => import('./reports/presentation/views/report-list.vue')},
-  {path: '/reports/:id', name: 'report-details', component: () => import('./reports/presentation/views/report-details.vue')},
-  {path: '/settings', name: 'settings', component: pendingSection, props: {titleKey: 'navigation.settings'}},
-
-  {path: '/plots', name: 'plots', component: () => import('./plots/presentation/views/plot-list.vue')},
-  {path: '/plots/new', name: 'plot-registration', component: () => import('./plots/presentation/views/plot-registration.vue')},
-  {path: '/plots/:id', name: 'plot-details', component: () => import('./plots/presentation/views/plot-details.vue')},
-
-  {path: '/plots/:id/crops/new', name: 'crop-registration', component: () => import('./field-management/presentation/components/crop-form.vue')},
-  {path: '/plots/:id/crops', name: 'crop-list', component: () => import('./field-management/presentation/views/crop-list.vue')},
-  {path: '/plots/:id/crops/:cropId/edit', name: 'crop-edit', component: () => import('./field-management/presentation/components/crop-form.vue')},
-  {path: '/plots/:id/crops/:cropId', name: 'crop-details', component: () => import('./field-management/presentation/views/crop-details.vue')}
+export const routes = [
+  {path: '/', redirect: '/home'},
+  ...['login', 'register', 'recover-access', 'verify-access'].map(name => ({path: `/${name}`, name, component: access, meta: {public: true, guestOnly: true}})),
+  {path: '/home', name: 'home', component: home},
+  {path: '/profiles', alias: '/profile', name: 'profile', component: () => import('./profiles/presentation/views/profile.vue')},
+  {path: '/settings', name: 'settings', component: () => import('./profiles/presentation/views/settings.vue')},
+  {path: '/notifications', name: 'notifications', component: () => import('./notifications/presentation/views/notifications.vue')},
+  {path: '/subscriptions', name: 'subscriptions', component: subscriptions},
+  {path: '/subscriptions/checkout/:planId', name: 'subscription-checkout', component: subscriptions},
+  {path: '/subscriptions/payments/:paymentId', name: 'payment-result', component: subscriptions},
+  {path: '/plot-members', name: 'plot-members', component: plotMembers},
+  {path: '/plots/:id/members', name: 'plot-members-detail', component: plotMembers},
+  {path: '/drones', name: 'drones', redirect: {name: 'drone-list'}, children: dronesRoutes},
+  {path: '/diagnoses', name: 'diagnoses', redirect: {name: 'diagnoses-list'}, children: diagnosesRoutes},
+  {path: '/reports', name: 'reports', redirect: {name: 'report-list'}, children: reportsRoutes},
+  {path: '/plots', name: 'plots', redirect: {name: 'plot-list'}, children: plotsRoutes},
+  {path: '/plots/:id/crops', name: 'crops', redirect: to => ({name: 'crop-list', params: {id: to.params.id}}), children: cropsRoutes},
+  {path: '/:pathMatch(.*)*', name: 'not-found', component: () => import('./shared/presentation/views/page-not-found.vue'), meta: {public: true}},
 ];
 
-export default createRouter({
-  history: createWebHistory(import.meta.env.BASE_URL),
-  routes
-});
+const router = createRouter({history: createWebHistory(import.meta.env.BASE_URL), routes});
+router.beforeEach(to => sessionRedirect(to, useSessionStore().isSignedIn()));
+export default router;

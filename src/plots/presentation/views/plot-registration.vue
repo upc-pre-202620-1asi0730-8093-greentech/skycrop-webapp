@@ -57,8 +57,10 @@ async function registerPlot() {
 
 <template>
   <section class="plots-page plot-registration-page">
-    <router-link class="back-link" to="/plots">{{ t('plots.back') }}</router-link>
-    <h1>{{ t('plots.registrationTitle') }}</h1>
+    <router-link class="action-link back-link" to="/plots">
+      <i class="pi pi-arrow-left" aria-hidden="true"></i>
+      <span>{{ t('plots.back') }}</span>
+    </router-link>    <h1>{{ t('plots.registrationTitle') }}</h1>
     <form @submit.prevent="registerPlot">
       <div class="plot-registration-grid">
         <fieldset class="plot-card" :disabled="saving">
